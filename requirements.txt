@@ -1,0 +1,23 @@
+weaviate-client
+fastapi
+uvicorn
+langchain
+langgraph
+langchain_openai
+mcp
+langchain-mcp-adapters
+langgraph-supervisor # langgrash 多agent主监督代理
+langgraph-swarm # langgrash 多agent群体广播代理
+langchain_community
+beautifulsoup4 # 解析网页用
+lxml # 解析网页用
+pytesseract # pdf ocr 识别图片用
+openpyxl # excel 识别用
+pandas # excel 识别用
+docx2txt # doc 解析用
+chardet>=5.2.0 # 继续文本自动判断字符集用
+PyMuPDF>=1.25.5
+xinference
+langchain_weaviate
+#textract==1.6.3
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121

@@ -1,0 +1,8 @@
+# Log Save Path, Defalue ../logs/app.log
+LOG_FILE:
+# Log file max size, the unit is MB
+LOG_FILE_MAX_SIZE: 20
+# Log file max backup count
+LOG_FILE_BACKUP_COUNT: 5
+# Log format
+LOG_FORMAT: '%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
