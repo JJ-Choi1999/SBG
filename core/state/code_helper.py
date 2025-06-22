@@ -5,10 +5,10 @@ import uuid
 from typing import Annotated, List
 from pydantic import BaseModel, Field
 
+from common.config.config import YAML_CONFIGS_INFO
 from core.state.base_state import BaseState
 
-# [todo] 以下class 的默认值需要之后读取配置获取
-__PROJECT_PATH = os.path.join(os.getcwd(), f'pj_{str(uuid.uuid1())}')
+ENABLE_MUTUAL = YAML_CONFIGS_INFO['code_helper']['mutual_config']['enable_mutual']
 
 class GenResult(BaseModel):
     requirement_analysis: list[str] = Field(
@@ -73,30 +73,54 @@ class GenResult(BaseModel):
 
 class GlobalSetting(BaseModel):
     enable_knowledge: bool = Field(
-        default=False,
+        default=(
+            False
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['global_setting']['enable_knowledge']
+        ),
         description="是否启用知识库功能[True/False]"
     )
     enable_web: bool = Field(
-        default=False,
+        default=(
+            False
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['global_setting']['enable_web']
+        ),
         description="是否启用Web搜索功能[True/False]"
     )
     max_retry: int = Field(
-        default=3,
+        default=(
+            3
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['global_setting']['max_retry']
+        ),
         description="[代码生成]最大重试次数[>0]",
         gt=0
     )
     project_path: str = Field(
-        default=os.path.join(os.getcwd(), f'pj_{str(uuid.uuid1())}'),
+        default=(
+            os.path.join(os.getcwd(), f'pj_{str(uuid.uuid1())}')
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['global_setting']['project_path']
+        ),
         description='项目保存路径'
     )
 
 class DataSource(BaseModel):
     workspace: str = Field(
-        default="",
+        default=(
+            ""
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['data_source']['workspace']
+        ),
         description='工作区'
     )
     file_paths: list = Field(
-        default=[],
+        default=(
+            []
+            if ENABLE_MUTUAL
+            else YAML_CONFIGS_INFO['code_helper']['mutual_config']['data_source']['file_paths']
+        ),
         description='作为数据源文件路径列表'
     )
 

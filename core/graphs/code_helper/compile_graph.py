@@ -26,6 +26,7 @@ warnings.filterwarnings("ignore")
 class CompileGraph:
     def __init__(
         self,
+        enable_mutual: bool = True,
         vector_store: WeaviateClient | None = None,
         agent_client: LLMAgent | None = None,
         send_mail: SendMail | None = None,
@@ -37,6 +38,7 @@ class CompileGraph:
         self.__agent_client = agent_client
         self.__send_mail = send_mail
 
+        self.__enable_mutual = enable_mutual
         self.__code_type = code_type if code_type else YAML_CONFIGS_INFO['code_helper']['code_type']
         self.__install_tool = install_tool if install_tool else YAML_CONFIGS_INFO['code_helper']['install_tool']
         self.__tavily_api_key = tavily_api_key if tavily_api_key else YAML_CONFIGS_INFO['code_helper']['tavily_api_key']
@@ -89,6 +91,7 @@ class CompileGraph:
 
         input_data = kwargs.pop("input_data", {})
         config = kwargs.pop("config", {})
+        kwargs['enable_mutual'] = self.__enable_mutual
 
         graph_instance = graph_class(**kwargs)
         node_funcs = graph_instance.graph_nodes()
@@ -148,6 +151,9 @@ class CompileGraph:
             self.__vector_store.close()
 
 if __name__ == '__main__':
-    # prompt = 'pydantic 一个 BaseModel 类 A 存在属性 a 且 a 的类型也是 BaseModel ，如何打印类 A 的json'
-    prompt = input(f'我是一个编码助手, 请输入您的编码需求: ')
-    compile_graph = CompileGraph()
+    __enable_mutual = YAML_CONFIGS_INFO['code_helper']['mutual_config']['enable_mutual']
+    prompt = input(f'我是一个编码助手, 请输入您的编码需求: ') \
+        if __enable_mutual \
+        else YAML_CONFIGS_INFO['code_helper']['mutual_config']['prompt']
+    compile_graph = CompileGraph(enable_mutual=__enable_mutual)
+    compile_graph.run(prompt=prompt)
