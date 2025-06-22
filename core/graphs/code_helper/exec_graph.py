@@ -314,7 +314,14 @@ class ExecGraph:
         action_state = state.action_state
 
         print(f' => 安装第三方依赖, 执行命令【{install_command}】')
-        command_result = os.popen(install_command).read()
+        command_result = subprocess.run(
+            install_command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",  # 显式指定编码
+            timeout=300
+        ).stdout
         print(f' => 命令执行完成:\n', command_result)
         print(f'-' * self.__spacing)
 
@@ -330,7 +337,8 @@ class ExecGraph:
             shell=True,
             capture_output=True,
             text=True,
-            encoding="utf-8"  # 显式指定编码
+            encoding="utf-8",  # 显式指定编码
+            timeout=300
         )
         command_result = sp_command.stdout
         code_error = sp_command.stderr
