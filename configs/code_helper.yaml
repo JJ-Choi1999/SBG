@@ -1,16 +1,16 @@
 # 基础配置
 code_type: python3 # [必填]代码生成器生成的编程语言类型, 多语言输入以下格式: python3/python2/c/c++/java/node.js
 install_tool: pip # [必填]编程语言对应第三方依赖安装工具
-tavily_api_key: # [选填] tavily 搜索引擎 openapi key, 开启Web搜索时必填, 申请地址: https://app.tavily.com/home
+tavily_api_key:  # [选填] tavily 搜索引擎 openapi key, 开启Web搜索时必填, 申请地址: https://app.tavily.com/home
 
 # weaviate 向量数据库配置, 配置详情: https://weaviate.io/developers/weaviate
 vector_store:
   embedding_client: # [必填]xinference 嵌入模型配置, 配置详情: https://inference.readthedocs.io/zh-cn/latest/index.html
-    base_url: "http://localhost:9997"
-    model_uid: "bge-m3"
+    base_url: http://localhost:9997
+    model_uid: bge-m3
   rerank_client: # [必填]xinference 嵌入模型配置, 配置详情: https://inference.readthedocs.io/zh-cn/latest/index.html
-    base_url: "http://localhost:9997"
-    model_uid: "bge-reranker-v2-m3"
+    base_url: http://localhost:9997
+    model_uid: bge-reranker-v2-m3
   port: 8080 # [必填]weaviate http 端口
   grpc_port: 50051 # [必填]weaviate grpc 端口
   additional_config:
@@ -21,15 +21,28 @@ vector_store:
 
 # [必填]Agent 客户端配置(使用 openai api请求格式), 请求示例: https://modelscope.cn/models/Qwen/Qwen3-32B
 agent_client:
-  base_url: "https://api-inference.modelscope.cn/v1/"
-  api_key: "api-key"
-  model: "Qwen/Qwen3-32B"
+  base_url: https://api-inference.modelscope.cn/v1/
+  api_key:
+  model: Qwen/Qwen3-32B
   extra_body:   # [选填]模型拓展字段, 可根据对应模型 openai 请求方式所支持的配置方式进行配置, 以下是 qwen3 开启 think 的配置
 #    enable_thinking: true
 #    thinking_budget: 4096
 
 # 邮件发送配置
 send_mail:
-  from_mail: # [必填]发送者邮箱
+  from_mail:  # [必填]发送者邮箱
   to_mail:  # [必填]接收者邮箱
-  auth_code: # [必填]邮箱SMTP授权码, 获取流程(QQ邮箱): 设置 -> 账号与安全 -> 安全设置 -> SMTP服务 -> 生成授权码
+  auth_code:  # [必填]邮箱SMTP授权码, 获取流程(QQ邮箱): 设置 -> 账号与安全 -> 安全设置 -> SMTP服务 -> 生成授权码
+
+# 交互配置
+mutual_config:
+  enable_mutual: False # 是否开启交互
+  prompt:  # [enable_mutual为True时必填]提示词
+  global_setting:
+    enable_knowledge: False # [enable_mutual为True时必填]是否开启知识库检索
+    enable_web: True # [enable_mutual为True时必填]是否开启Web检索
+    max_retry: 2 # [enable_mutual为True时必填]代码生成最大重试次数
+    project_path:  # [enable_mutual为True时必填]生成代码结果保存目录路径
+  data_source:
+    workspace: "" # [enable_mutual为True时必填]用于检索的知识库的索引名
+    file_paths: []  # [enable_mutual为True时必填]需要上传至向量数据库作为知识库的文件/文件夹地址
