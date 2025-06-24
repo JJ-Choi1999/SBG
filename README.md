@@ -42,22 +42,26 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 >
 
 ##### [配置文件](./configs/code_helper.yaml)
-
 ##### [提示词模板](./core/prompts/code_helper.py)
-
 ##### [Graph 节点状态](./core/state/code_helper.py)
-
 ##### 执行示例
+```python
+python ./core/graphs/code_helper/compile_graph.py
+```
 
 ###### 执行步骤
 > 1. [初始化代码助手全局配置](./source/code_helper/draw_graph/code_helper/(step1)init_graph.png)
 > 2. [执行代码助手具体流程](./source/code_helper/draw_graph/code_helper/(step2)exec_graph.png)
 > 3. [代码助手执行完成后结果处理](./source/code_helper/draw_graph/code_helper/(step3)end_graph.png)
+>
 
 ###### 可交互模式
 > 1. [执行录屏](./source/code_helper/enable_mutual.mp4)
 > 2. [执行结果](./source/code_helper/enable_mutual.png)
+>
 
 ###### 无交互模式
 > 1. [执行录屏](./source/code_helper/unenable_mutual.mp4)
 > 2. [执行结果](./source/code_helper/unenable_mutual.png)
+>
+
