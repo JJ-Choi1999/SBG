@@ -437,8 +437,6 @@ class ExecGraph:
         for reset_key in reset_keys:
             gen_result[reset_key] = ''
 
-        print(f'error_handle.gen_result: {gen_result}')
-
         return {
             'gen_result': gen_result
         }
