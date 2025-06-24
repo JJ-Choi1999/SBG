@@ -102,7 +102,7 @@ class CompileGraph:
 
         max_retry = input_data.get('global_setting', {}).get('max_retry', 3)
         if "recursion_limit" not in config:
-            config["recursion_limit"] = len(edge_maps) * max_retry if graph_name == 'ExecGraph' else len(edge_maps)
+            config["recursion_limit"] = len(edge_maps) * max_retry * 2 if graph_name == 'ExecGraph' else len(edge_maps)
 
         result = graph.invoke(input=input_data, config=config)
         return CodeHelperState(**result)
