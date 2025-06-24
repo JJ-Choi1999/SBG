@@ -75,7 +75,7 @@ class ExecGraph:
         self.__agent_client.agent_ask(prompt=prompt, enable_assistant=True, enable_print=False)
 
         req_analysis = self.__agent_client.messages[-1].content
-        print(f'requirement_analysis.req_analysis:', req_analysis)
+        # print(f'requirement_analysis.req_analysis:', req_analysis)
         requirement_analysis = extract_tags(text=req_analysis, tag='requirement')
         if not requirement_analysis:
             raise ExtraTagError(f'需求分析标签提取异常, 源提取文本: {req_analysis}')
