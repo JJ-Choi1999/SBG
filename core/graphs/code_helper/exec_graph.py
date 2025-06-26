@@ -80,6 +80,11 @@ class ExecGraph:
         prompt = state.prompt
         file_paths = extract_paths(text=prompt)
         for file_path in file_paths:
+
+            if not os.path.exists(file_path):
+                print(f' => 文件: 【{file_path}】 不存在, 跳过...')
+                continue
+
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     prompt += (f'\n\n文件内容(<file_content></file_content>标签内为文件内容):'
