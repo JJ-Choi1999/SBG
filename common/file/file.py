@@ -139,18 +139,51 @@ def output_content_to_file(file_path: str, content: str, encoding: str = 'utf-8'
 
     return file_path
 
-def extract_paths(text) -> list[str]:
+def extract_paths(text, file_exists: bool = False) -> list[str]:
     """
     从文本中提取所有路径字符串。
     :param text: 需要提取字符串的文本
+    :param file_exists: 提取出来的文件是否需要存在
     :return:
         返回文本中的路径字符串(
             注意: 如果仅需要提取路径字符串, 则必须保证路径在字符串中存在空格;
             如: "该段文本的路径为 /user/gen/file.txt ", 可以在正常提取到路径 ["/user/gen/file.txt"];
             但: "该段文本的路径为 /user/gen/file.txt" 或 "该段文本的路径为/user/gen/file.txt" 则只会提取到
-            ["该段文本的路径为 /user/gen/file.txt"] 或 ["该段文本的路径为/user/gen/file.txt"]
+            ["该段文本的路径为 /user/gen/file.txt"] 或 ["该段文本的路径为/user/gen/file.txt"];
+            如果 file_exists=True 则会不停递归识别出来的文件路径, 剔除误提取的内容.
         ),
         如果文本中不存在路径字符串, 如: "今天北京的天气怎么样", 则返回 []
     """
     pattern = re.compile(r'(?:[A-Za-z]:[\\/])?(?:[^\\/\s，,]+[\\/])+[^\\/\s，,]+')
-    return pattern.findall(text)
+    if not file_exists: return pattern.findall(text)
+    file_paths = [recursion_file_path(file_path) for file_path in pattern.findall(text)]
+    return file_paths
+
+def recursion_file_path(path_text: str):
+    """
+    递归去除文本中不属于文件路径的文本
+    :param path_text: 包含文件路径的文本
+    :return: 返回文件路径
+    """
+    recursion_path = path_text
+    bool_1 = recursion_path[-1] in ['\\', '/']
+    bool_2 = os.path.exists(recursion_path) and os.path.isfile(recursion_path)
+
+    while True:
+        if bool_1 or bool_2: break
+        recursion_path = recursion_path[:-1]
+        print(f'path_text: {path_text}, recursion_path: {recursion_path}')
+
+    return recursion_path
+
+if __name__ == '__main__':
+    # 示例文本
+    # text = (
+    #     "文本中的路径如 C:\\Users\\user\\file.txt 和 /home/user/docs/ "
+    #     "还有相对路径 images/pic.jpg 和 dir/file 以及 C:/Program Files/file.txt "
+    #     "和文件夹路径 C:\\Users\\ 和 /var/log/ 以及仅文件名 file.txt"
+    # )#.replace(' ', '')
+    text = r'读取文件D:\AiAgent\SBG\core\agent\llm_agent.py提取注释 "# [todo] ..." 的待办事项作为需求, 解决对应 todo 事项'
+    # 提取路径
+    paths = extract_paths(text, file_exists=True)
+    print(paths)
