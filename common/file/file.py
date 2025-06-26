@@ -2,6 +2,7 @@ import importlib
 import os
 import re
 import sys
+import time
 from pathlib import Path
 from typing import Iterator, Union
 
@@ -139,11 +140,12 @@ def output_content_to_file(file_path: str, content: str, encoding: str = 'utf-8'
 
     return file_path
 
-def extract_paths(text, file_exists: bool = False) -> list[str]:
+def extract_paths(text, file_exists: bool = False, timeout: int = 300) -> list[str]:
     """
     从文本中提取所有路径字符串。
     :param text: 需要提取字符串的文本
     :param file_exists: 提取出来的文件是否需要存在
+    :param timeout: 递归超时时间(单位: s)
     :return:
         返回文本中的路径字符串(
             注意: 如果仅需要提取路径字符串, 则必须保证路径在字符串中存在空格;
@@ -159,17 +161,19 @@ def extract_paths(text, file_exists: bool = False) -> list[str]:
     file_paths = [recursion_file_path(file_path) for file_path in pattern.findall(text)]
     return file_paths
 
-def recursion_file_path(path_text: str):
+def recursion_file_path(path_text: str, timeout: int = 300):
     """
     递归去除文本中不属于文件路径的文本
     :param path_text: 包含文件路径的文本
+    :param timeout: 递归超时时间(单位: s)
     :return: 返回文件路径
     """
     recursion_path = path_text
     bool_1 = recursion_path[-1] in ['\\', '/']
     bool_2 = os.path.exists(recursion_path) and os.path.isfile(recursion_path)
+    s_time = time.time()
 
-    while True:
+    while time.time() - s_time <= timeout:
         if bool_1 or bool_2: break
         recursion_path = recursion_path[:-1]
         print(f'path_text: {path_text}, recursion_path: {recursion_path}')

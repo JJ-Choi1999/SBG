@@ -78,7 +78,7 @@ class ExecGraph:
         """
         index = 1
         prompt = state.prompt
-        file_paths = extract_paths(text=prompt)
+        file_paths = extract_paths(text=prompt, file_exists=True)
         for file_path in file_paths:
 
             if not os.path.exists(file_path):
