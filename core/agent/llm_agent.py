@@ -38,7 +38,6 @@ class LLMAgent(LLMChat):
         self._tools = tools
         self._memory = MemorySaver()
 
-        # [todo] 之后改为wrap装饰器 + anno 注解判断
         if self._recursion_limit < 2:
             raise Exception(f'recursion_limit 不能小于2')
 
