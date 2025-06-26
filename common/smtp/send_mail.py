@@ -3,7 +3,7 @@ import traceback
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-from common.err.smtp import SendMailError
+from common.error.smtp import SendMailError
 
 
 class SendMail:

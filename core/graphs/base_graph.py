@@ -6,7 +6,7 @@ from PIL import Image
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.graph import StateGraph
 
-from common.err.graph import EdgeMapsError, EdgeFuncHasError
+from common.error.graph import EdgeMapsError, EdgeFuncHasError
 
 
 class BaseGraph:

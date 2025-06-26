@@ -6,7 +6,7 @@ import winsound
 
 from langgraph.constants import START, END
 
-from common.err.smtp import SendMailError
+from common.error.smtp import SendMailError
 from common.smtp.send_mail import SendMail
 from core.common.format_result.format_result import format_search_refer
 from core.graphs.base_graph import BaseGraph

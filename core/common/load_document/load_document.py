@@ -7,7 +7,7 @@ from langchain_community.document_loaders.parsers.language.language_parser impor
 from langchain_core.documents import Document
 from langchain_community.document_loaders.parsers import LanguageParser
 
-from common.err.load import UnLoadableError
+from common.error.load import UnLoadableError
 from common.inspect.inpect_instance import InpectInstance
 
 # Unstructured 需要设置环境变量, 防止下载 nlp 和 cv 包
