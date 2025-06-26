@@ -2,7 +2,7 @@ from typing import List, Dict, Annotated
 from pydantic import BaseModel, Field
 import operator
 
-from common.enumerate.graph import ActionState
+from common.enum.graph import ActionState
 
 
 class BaseState(BaseModel):
