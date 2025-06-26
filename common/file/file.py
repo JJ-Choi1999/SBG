@@ -1,5 +1,6 @@
 import importlib
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Iterator, Union
@@ -137,3 +138,19 @@ def output_content_to_file(file_path: str, content: str, encoding: str = 'utf-8'
         f.write(content)
 
     return file_path
+
+def extract_paths(text) -> list[str]:
+    """
+    从文本中提取所有路径字符串。
+    :param text: 需要提取字符串的文本
+    :return:
+        返回文本中的路径字符串(
+            注意: 如果仅需要提取路径字符串, 则必须保证路径在字符串中存在空格;
+            如: "该段文本的路径为 /user/gen/file.txt ", 可以在正常提取到路径 ["/user/gen/file.txt"];
+            但: "该段文本的路径为 /user/gen/file.txt" 或 "该段文本的路径为/user/gen/file.txt" 则只会提取到
+            ["该段文本的路径为 /user/gen/file.txt"] 或 ["该段文本的路径为/user/gen/file.txt"]
+        ),
+        如果文本中不存在路径字符串, 如: "今天北京的天气怎么样", 则返回 []
+    """
+    pattern = re.compile(r'(?:[A-Za-z]:[\\/])?(?:[^\\/\s，,]+[\\/])+[^\\/\s，,]+')
+    return pattern.findall(text)
