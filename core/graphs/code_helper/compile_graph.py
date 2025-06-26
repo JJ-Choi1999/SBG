@@ -129,7 +129,6 @@ class CompileGraph:
             exec_result = self.compile_and_run(
                 graph_class=ExecGraph,
                 graph_name='ExecGraph',
-                code_type=self.__code_type,
                 install_tool=self.__install_tool,
                 max_retry=self.__max_retry,
                 agent_client=self.__agent_client,
