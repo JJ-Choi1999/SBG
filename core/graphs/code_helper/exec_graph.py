@@ -11,8 +11,8 @@ from langgraph.constants import START, END
 from langgraph.types import RetryPolicy
 
 from common.enum.graph import ActionState
-from common.err.extra import ExtraTagError
-from common.file.file import output_content_to_file
+from common.error.extra import ExtraTagError
+from common.file.file import output_content_to_file, extract_paths
 from core.agent.llm_agent import LLMAgent
 from core.common.format_result.format_result import extract_tags, format_search_refer
 from core.common.rag.vector_stores import WeaviateClient
@@ -27,7 +27,6 @@ class ExecGraph:
 
     def __init__(
         self,
-        code_type: str,
         install_tool: str,
         max_retry: int = 5,
         agent_client: LLMAgent | None = None,
@@ -39,7 +38,6 @@ class ExecGraph:
     ):
         """
         执行流程
-        :param code_type: 需要生成的代码类型
         :param install_tool: 代码安装第三方依赖的工具
         :param max_attempts: 最大重试次数
         :param agent_client: 智能体对象
@@ -50,7 +48,6 @@ class ExecGraph:
         :param enable_mutual: 是否开启交互模式
         """
         self.__spacing = 100
-        self.__code_type = code_type
         self.__install_tool = install_tool
         self.__max_retry = max_retry
         self.__agent_client = agent_client
@@ -62,6 +59,43 @@ class ExecGraph:
         self.__reason: str | None = None
         self.__solution: str | None = None
         self.__enable_mutual: bool = enable_mutual
+
+    def is_read_file(self, state: CodeHelperState):
+        """
+        是否读取文件内容
+        :param state:
+        :return:
+        """
+        prompt = state.prompt
+        if not extract_paths(text=prompt): return False
+        return True
+
+    def insert_file_content(self, state: CodeHelperState):
+        """
+        插入 prompt 中文件内容到 prompt 中
+        :param state:
+        :return:
+        """
+        index = 1
+        prompt = state.prompt
+        file_paths = extract_paths(text=prompt)
+        for file_path in file_paths:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    prompt += (f'\n\n文件内容(<file_content></file_content>标签内为文件内容):'
+                               f'\n\t({index}){file_path}内容:\n\n'
+                               f'<file_content>\n{f.read()}\n</file_content>')
+            except:
+                pass
+            finally:
+                index += 1
+
+        print(f'prompt:', prompt)
+
+        return {
+            'prompt': prompt
+        }
+
 
     def requirement_analysis(self, state: CodeHelperState):
         """
@@ -280,8 +314,8 @@ class ExecGraph:
         if self.__retry_count > 1:
             backup_dir = os.path.join(project_path, f'v_{self.__retry_count}_{uuid_str}')
             os.makedirs(backup_dir, exist_ok=True)
-            shutil.move(code_file, backup_dir)
-            shutil.move(test_file, backup_dir)
+            if os.path.exists(code_file): shutil.move(code_file, backup_dir)
+            if os.path.exists(test_file): shutil.move(test_file, backup_dir)
 
         print(f'=' * self.__spacing)
         print(f'-> 生成代码写入文件【{code_file}】...')
@@ -290,6 +324,7 @@ class ExecGraph:
         print(f'-> 测试代码写入文件【{code_file}】...')
         test_file = output_content_to_file(file_path=test_file, content=test_code)
         print(f'-> 测试代码写入【完成】')
+
         return {
             'gen_result': {
                 **gen_result,
@@ -313,17 +348,18 @@ class ExecGraph:
         ran_result = state.gen_result.ran_result
         action_state = state.action_state
 
-        print(f' => 安装第三方依赖, 执行命令【{install_command}】')
-        command_result = subprocess.run(
-            install_command,
-            shell=True,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",  # 显式指定编码
-            timeout=300
-        ).stdout
-        print(f' => 命令执行完成:\n', command_result)
-        print(f'-' * self.__spacing)
+        if install_command:
+            print(f' => 安装第三方依赖, 执行命令【{install_command}】')
+            command_result = subprocess.run(
+                install_command,
+                shell=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",  # 显式指定编码
+                timeout=300
+            ).stdout
+            print(f' => 命令执行完成:\n', command_result)
+            print(f'-' * self.__spacing)
 
         # 注册项目目录
         sys.path.append(project_path)
@@ -470,6 +506,9 @@ class ExecGraph:
             },
             {
                 'node': self.error_handle
+            },
+            {
+                'node': self.insert_file_content
             }
         ]
 
@@ -480,7 +519,13 @@ class ExecGraph:
         """
         return [
             {
-                'start_key': START,
+                'source': START,
+                'path': self.is_read_file,
+                'path_map': {True: 'insert_file_content', False: 'requirement_analysis'},
+                'edge_func': 'add_conditional_edges'
+            },
+            {
+                'start_key': 'insert_file_content',
                 'end_key': 'requirement_analysis',
                 'edge_func': 'add_edge'
             },
