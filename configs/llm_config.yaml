@@ -1,0 +1,6 @@
+base_url: https://api-inference.modelscope.cn/v1/
+api_key: c4c621c1-6522-49e9-80f3-2a8c70fa08ed
+model: Qwen/Qwen3-32B
+extra_body:   # [选填]模型拓展字段, 可根据对应模型 openai 请求方式所支持的配置方式进行配置, 以下是 qwen3 开启 think 的配置
+#    enable_thinking: true
+#    thinking_budget: 4096
