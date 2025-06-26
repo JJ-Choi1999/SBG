@@ -127,6 +127,7 @@ class CompileGraph:
                 graph_name='ExecGraph',
                 code_type=self.__code_type,
                 install_tool=self.__install_tool,
+                max_retry=self.__max_retry,
                 agent_client=self.__agent_client,
                 tavily_api_key=self.__tavily_api_key,
                 input_data=init_result.model_dump()
