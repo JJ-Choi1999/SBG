@@ -44,6 +44,7 @@ class CompileGraph:
         self.__tavily_api_key = tavily_api_key if tavily_api_key else YAML_CONFIGS_INFO['code_helper']['tavily_api_key']
         self.__chunk_size = YAML_CONFIGS_INFO.get('code_helper', {}).get('chunk_size', 200)
         self.__chunk_overlap = YAML_CONFIGS_INFO.get('code_helper', {}).get('chunk_size', 20)
+        self.__running_command = YAML_CONFIGS_INFO['code_helper']['running_command']
 
         if not self.__vector_store:
             self.__vector_store = WeaviateClient(
@@ -135,7 +136,8 @@ class CompileGraph:
                 vector_store=self.__vector_store,
                 tavily_api_key=self.__tavily_api_key,
                 input_data=init_result.model_dump(),
-                chunk_size=self.__chunk_size
+                chunk_size=self.__chunk_size,
+                running_command=self.__running_command
             )
 
             # Step 3: EndGraph
