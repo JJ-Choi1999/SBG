@@ -7,7 +7,6 @@ from langchain_core.documents import Document
 from langchain_weaviate import WeaviateVectorStore
 from weaviate.auth import AuthCredentials
 from weaviate.collections.classes.filters import _Filters
-from weaviate.collections.collections.sync import _Collections
 from weaviate.config import AdditionalConfig
 from weaviate.classes.query import Filter
 
@@ -61,7 +60,7 @@ class WeaviateClient:
         return self.__client
 
     @property
-    def collections(self) -> _Collections:
+    def collections(self):
         return self.__client.collections
 
     @property
