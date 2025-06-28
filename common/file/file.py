@@ -1,3 +1,4 @@
+import base64
 import importlib
 import os
 import re
@@ -11,6 +12,8 @@ import pandas as pd
 import requests
 
 from bs4 import BeautifulSoup
+
+IMG_FORMAT = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg', '.gif', '.jxl', '.heic', '.heif', '.tiff', '.tif', '.png']
 
 def iter_file_infos(file_path: Union[str, Path] , filter_suffix: list[str] = []) -> Iterator[dict[str, Union[str, Path]]]:
     """
@@ -224,3 +227,23 @@ def valid_image_url(url: str) -> bool:
         return response.headers.get('Content-Type', '').startswith('image/')
     except:
         return False
+
+def encode_image(image_path: str) -> str | None:
+    """
+    本地图片转base64
+    :param image_path: 需要转换的本地图片地址
+    :return: 图片base64码
+    """
+    try:
+        if os.path.splitext(image_path)[-1] in IMG_FORMAT:
+            with open(image_path, "rb") as image_file:
+                return base64.b64encode(image_file.read()).decode('utf-8')
+    except:
+        return None
+
+    return None
+
+if __name__ == '__main__':
+    image_path = r"C:\Users\Lenovo\908fa0ec08fa513dcce161dd326d55fbb2fbd96e.webp"
+    # image_path = r"C:\Users\Lenovo\Downloads\README.md"
+    print(encode_image(image_path))
