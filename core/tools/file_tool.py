@@ -1,6 +1,7 @@
 import os
 
 from langchain_core.tools import tool
+from common.file.file import recursion_file_path
 
 
 @tool(
@@ -10,6 +11,7 @@ from langchain_core.tools import tool
 def read_file(file_path: str) -> str:
 
     file_content = 'ERROR: 【输入路径非可读文件...】'
+    file_path = recursion_file_path(file_path)
 
     try:
         if os.path.isfile(file_path):

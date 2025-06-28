@@ -169,12 +169,15 @@ def recursion_file_path(path_text: str, timeout: int = 300):
     :return: 返回文件路径
     """
     recursion_path = path_text
-    bool_1 = recursion_path[-1] in ['\\', '/']
-    bool_2 = os.path.exists(recursion_path) and os.path.isfile(recursion_path)
     s_time = time.time()
 
     while time.time() - s_time <= timeout:
-        if bool_1 or bool_2: break
-        recursion_path = recursion_path[:-1]
 
-    return recursion_path
+        if recursion_path[-1] in ['\\', '/']:
+            return path_text
+
+        if os.path.exists(recursion_path) and os.path.isfile(recursion_path):
+            return recursion_path
+
+        recursion_path = recursion_path[:-1]
+        #print(f'recursion_path:', recursion_path)

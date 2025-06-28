@@ -14,20 +14,24 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ---
 
-### 已实现功能
-#### 代码助手
+<details>
+<summary><h3 style="display: inline">已实现功能</h3></summary>
+
+<details style="margin: 15px">
+<summary><h4 style="display: inline">1. 代码助手</h4></summary>
+
 ##### 作用
 > 1. 用户输入编码需求，针对用户输入需求，进行需求完善和需求分析
 > 2. 针对需求分析内容，生成对应的安装第三方依赖命令、对应代码、预期执行结果
 > 3. 执行安装第三方依赖命令和需求对应代码
 > 4. 输出执行结果，判断执行结果是否和Agent 生成的预期执行结果一致
 >
-> 4.1 如果一致，则执行成功
->
-> 4.2 否则重试生成流程，直到执行成功或到达最大重试次数终止
+>> 4.1 如果一致，则执行成功
+>>
+>> 4.2 否则重试生成流程，直到执行成功或到达最大重试次数终止
 >
 > 5. 将用户输入、需求分析、生成内容、执行结果发送到邮箱确认
->
+> 
 
 ##### 生成数据来源
 > 1. LLM 模型内置数据
@@ -64,4 +68,9 @@ python ./core/graphs/code_helper/compile_graph.py
 > 1. [执行录屏](./source/code_helper/unenable_mutual.mp4)
 > 2. [执行结果](./source/code_helper/unenable_mutual.png)
 >
+</details>
+
+</details>
+
+---
 
