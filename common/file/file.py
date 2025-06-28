@@ -176,6 +176,5 @@ def recursion_file_path(path_text: str, timeout: int = 300):
     while time.time() - s_time <= timeout:
         if bool_1 or bool_2: break
         recursion_path = recursion_path[:-1]
-        print(f'path_text: {path_text}, recursion_path: {recursion_path}')
 
     return recursion_path
