@@ -7,7 +7,7 @@ from langchain_core.tools import tool
     "read_file",
     description='输入参数file_path 作为文件路径, 读取文件内容'
 )
-def read_file(file_path: str) -> dict:
+def read_file(file_path: str) -> str:
 
     file_content = 'ERROR: 【输入路径非可读文件...】'
 
@@ -18,7 +18,4 @@ def read_file(file_path: str) -> dict:
     except Exception as e:
         file_content = 'ERROR: 【打开文件出错, 内容无法读取...】'
 
-    return {
-        'file_path': file_path,
-        'file_content': file_content
-    }
+    return f'文件路径: {file_path}\n\n文件内容:\n {file_content}'
