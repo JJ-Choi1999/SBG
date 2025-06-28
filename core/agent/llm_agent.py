@@ -60,7 +60,7 @@ class LLMAgent(LLMChat):
         """
         return self._agent_executor.get_state(config=self._config)
 
-    def agent_ask(self, prompt: str, enable_assistant: bool = False, enable_print: bool = True) -> Iterator[dict[str, Any] | Any]:
+    def agent_ask(self, prompt: Union[str, list[Union[str, dict]]], enable_assistant: bool = False, enable_print: bool = True) -> Iterator[dict[str, Any] | Any]:
         """
         agent 对话
         :param prompt: 提示词
