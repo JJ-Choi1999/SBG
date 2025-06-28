@@ -179,15 +179,3 @@ def recursion_file_path(path_text: str, timeout: int = 300):
         print(f'path_text: {path_text}, recursion_path: {recursion_path}')
 
     return recursion_path
-
-if __name__ == '__main__':
-    # 示例文本
-    # text = (
-    #     "文本中的路径如 C:\\Users\\user\\file.txt 和 /home/user/docs/ "
-    #     "还有相对路径 images/pic.jpg 和 dir/file 以及 C:/Program Files/file.txt "
-    #     "和文件夹路径 C:\\Users\\ 和 /var/log/ 以及仅文件名 file.txt"
-    # )#.replace(' ', '')
-    text = r'读取文件D:\AiAgent\SBG\core\agent\llm_agent.py提取注释 "# [todo] ..." 的待办事项作为需求, 解决对应 todo 事项'
-    # 提取路径
-    paths = extract_paths(text, file_exists=True)
-    print(paths)
