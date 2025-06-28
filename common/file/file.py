@@ -3,10 +3,12 @@ import os
 import re
 import sys
 import time
+
 from pathlib import Path
 from typing import Iterator, Union
 
 import pandas as pd
+import requests
 
 from bs4 import BeautifulSoup
 
@@ -140,7 +142,7 @@ def output_content_to_file(file_path: str, content: str, encoding: str = 'utf-8'
 
     return file_path
 
-def extract_paths(text, file_exists: bool = False, timeout: int = 300) -> list[str]:
+def extract_paths(text: str, file_exists: bool = False, timeout: int = 300) -> list[str]:
     """
     从文本中提取所有路径字符串。
     :param text: 需要提取字符串的文本
@@ -156,9 +158,9 @@ def extract_paths(text, file_exists: bool = False, timeout: int = 300) -> list[s
         ),
         如果文本中不存在路径字符串, 如: "今天北京的天气怎么样", 则返回 []
     """
-    pattern = re.compile(r'(?:[A-Za-z]:[\\/])?(?:[^\\/\s，,]+[\\/])+[^\\/\s，,]+')
+    pattern = re.compile(r'(?:[A-Za-z]:[\\/])?(?:[^\\/\s，,]+[\\/])+[^\\/\s，,]+', re.IGNORECASE)
     if not file_exists: return pattern.findall(text)
-    file_paths = [recursion_file_path(file_path) for file_path in pattern.findall(text)]
+    file_paths = [recursion_file_path(file_path, timeout=timeout) for file_path in pattern.findall(text)]
     return file_paths
 
 def recursion_file_path(path_text: str, timeout: int = 300):
@@ -181,3 +183,44 @@ def recursion_file_path(path_text: str, timeout: int = 300):
 
         recursion_path = recursion_path[:-1]
         #print(f'recursion_path:', recursion_path)
+
+def extract_img_url(text: str):
+    """
+    从文本中提取所有网络可访问图片资源字符串
+    :param text: 需要提取字符串的文本
+    :return:
+        输入:
+            '''
+            查看这张照片：https://example.com/images/photo.jpg
+            带参数的图片：http://example.com/images/avatar.jpg?size=100
+            带多个参数的图片：https://example.com/images/logo.png?Expires=1234567890&Signature=SIGNATURE
+            带片段的图片：https://example.com/images/thumbnail.gif#preview
+            路径复杂的图片：https://example.com/path/to/image.webp?param1=value1&param2=value2
+            '''
+        输出:
+            [
+                'https://example.com/images/photo.jpg',
+                'http://example.com/images/avatar.jpg?size=100',
+                'https://example.com/images/logo.png?Expires=1234567890&Signature=SIGNATURE',
+                'https://example.com/images/thumbnail.gif',
+                'https://example.com/path/to/image.webp?param1=value1&param2=value2'
+            ]
+    """
+    pattern_text = r'https?://(?:[^\s<>"\'\]?#]+)\.(?:jpe?g|png|gif|bmp|webp)(?:\?[a-zA-Z0-9_\-\.+]+=[a-zA-Z0-9_\-\.+]+(?:&[a-zA-Z0-9_\-\.+]+=[a-zA-Z0-9_\-\.+]+)*)?'
+
+    pattern = re.compile(pattern_text, re.IGNORECASE)
+    matches = pattern.findall(text)
+
+    return matches
+
+def valid_image_url(url: str) -> bool:
+    """
+    验证图片是否可访问
+    :param url: 需要验证的的图片url
+    :return: 图片是否url可访问
+    """
+    try:
+        response = requests.head(url, timeout=5)
+        return response.headers.get('Content-Type', '').startswith('image/')
+    except:
+        return False
