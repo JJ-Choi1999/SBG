@@ -51,7 +51,7 @@ python ./core/graphs/code_helper/compile_graph.py
 
 ###### 执行步骤
 > 1. [初始化代码助手全局配置](./source/code_helper/draw_graph/code_helper/(step1)init_graph.png)
-> 2. [执行代码助手具体流程](./source/code_helper/draw_graph/code_helper/(step2)exec_graph.png)
+> 2. [执行代码助手具体流程](./source/code_helper/draw_graph/code_helper/(step2)exec_graph(new).png)
 > 3. [代码助手执行完成后结果处理](./source/code_helper/draw_graph/code_helper/(step3)end_graph.png)
 >
 
