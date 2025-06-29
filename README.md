@@ -74,3 +74,24 @@ python ./core/graphs/code_helper/compile_graph.py
 
 ---
 
+<details>
+
+<summary><h3 style="display: inline">Feature</h3></summary>
+
+- [x] Agent 处理文本中包含本地文件地址字符串，识别和读取
+- [x] Agent 对多模态的支持
+- [x] Agent 处理文本中的本地\网络图片，上传图像多模态对话
+- [ ] 封装OCR\YOLO\SAM 等小模型
+- [ ] Agent 对话持久化
+- [ ] Agent 能力API 发表
+- [ ] Agent Nacos 配置发布和注册
+- [ ] MCP\A2A 能力抽象和封装
+- [ ] 历史对话流 QA 格式格式化输出
+- [ ] 模型微调\量化脚本能力发布
+- [ ] 模型微调\量化后导入对应测试数据后，不同尺寸的模型执行结果聚合
+- [ ] 依据模型微调\量化不同尺寸对不同数据集的输出结果，设置自动化流程
+- [ ] 封装 Android/IOS/Web/Windows/Macos/HarmonyOS 自动化能力
+- [ ] 封装代理爬虫搜索 Web 聚合接口
+- [ ] 抽象封装风险词识别\替换工具
+
+</details>
