@@ -93,5 +93,6 @@ python ./core/graphs/code_helper/compile_graph.py
 - [ ] 封装 Android/IOS/Web/Windows/Macos/HarmonyOS 自动化能力
 - [ ] 封装代理爬虫搜索 Web 聚合接口
 - [ ] 抽象封装风险词识别\替换工具
+- [ ] 按照配置动态加载第三方依赖库
 
 </details>
