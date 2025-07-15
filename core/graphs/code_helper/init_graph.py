@@ -260,9 +260,7 @@ class InitGraph:
         print(f'* 文件正在写入知识库...')
         split_docs = list(chain.from_iterable(list(split_docs_map.values())))
         self.__vector_store.init_vector(split_docs=split_docs, index_name=state.data_source.workspace)
-        print(f'* 文件写入知识库完成...')
-        e_time = time.time()
-        print(f'c_time:', e_time - s_time)
+        print(f'* 文件写入知识库完成, 耗时: 【{time.time() - s_time}(s)】')
 
         return {
             'data_source': {
