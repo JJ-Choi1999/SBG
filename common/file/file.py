@@ -136,9 +136,7 @@ def output_content_to_file(file_path: str, content: str, encoding: str = 'utf-8'
     :param encoding: 写入文件字符集编码
     :return:
     """
-    if not os.path.exists(os.path.dirname(file_path)):
-        os.makedirs(os.path.dirname(file_path))
-
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     # [todo] 之后要实现自动获取字符集
     with open(file_path, 'w', encoding=encoding) as f:
         f.write(content)
