@@ -43,9 +43,15 @@ mutual_config:
   prompt:  # [enable_mutual为True时必填]提示词
   global_setting:
     enable_knowledge: False # [enable_mutual为True时必填]是否开启知识库检索
-    enable_web: False # [enable_mutual为True时必填]是否开启Web检索
+    enable_web: True # [enable_mutual为True时必填]是否开启Web检索
     max_retry: 2 # [enable_mutual为True时必填]代码生成最大重试次数
     project_path:  # [enable_mutual为True时必填]生成代码结果保存目录路径
   data_source:
-    workspace: "" # [enable_knowledge为True时必填]用于检索的知识库的索引名
-    file_paths: []  # [enable_mutual为True时必填]需要上传至向量数据库作为知识库的文件/文件夹地址
+    # [enable_knowledge为True时必填]用于检索的知识库的索引名
+    # (当 enable_knowledge为False 且 enable_knowledge 为 True 时使用该值作为索引检索向量数据库作为知识库来源)
+    workspace: ""
+    # [enable_mutual为True时必填]需要上传至向量数据库作为知识库的文件地址
+    # (当 enable_knowledge为False 且 enable_knowledge 为 True 时,
+    # 如果 file_paths 不为空, 则使用 file_paths 值全量更新 workspace 关联的向量数据库数据;
+    # 如果 file_paths 为空, 则使用上一次 workspace 关联的向量数据库数据, 不作更改)
+    file_paths: []
