@@ -1,6 +1,7 @@
 import os.path
 import sys
 import time
+import traceback
 from itertools import chain
 from pathlib import Path
 import uuid
@@ -163,6 +164,11 @@ class CompileGraph:
             )
         except Exception as e:
             print(f'代码生成器执行出现异常, 异常原因: {str(e)}')
+            self.__send_mail.send(
+                subject=f'【执行异常】【需求】{prompt}',
+                content=f'代码生成器执行出现异常, 异常原因: {traceback.format_exc()}',
+                mime_type='plain'
+            )
         finally:
             self.__close_vector()
 
