@@ -163,7 +163,7 @@ class CompileGraph:
                 input_data=exec_result.model_dump()
             )
         except Exception as e:
-            print(f'代码生成器执行出现异常, 异常原因: {str(e)}')
+            print(f'代码生成器执行出现异常, 异常原因: {traceback.format_exc()}')
             self.__send_mail.send(
                 subject=f'【执行异常】【需求】{prompt}',
                 content=f'代码生成器执行出现异常, 异常原因: {traceback.format_exc()}',
