@@ -386,6 +386,9 @@ class ExecGraph:
 
         print(f' => 命令执行完成:\n', command_result.strip())
         print(f'-' * self.__spacing)
+        if code_error:
+            print(f' => 命令执行异常:\n', code_error.strip())
+            print(f'-' * self.__spacing)
         print(f' => 预期结果:\n', ran_result.strip())
 
         # 判断运行测试文件, 测试生成代码结果, 是否与预期效果 ran_result 一样
