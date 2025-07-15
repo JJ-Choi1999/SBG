@@ -326,7 +326,7 @@ class ExecGraph:
         print(f'-> 生成代码写入文件【{code_file}】...')
         code_file = output_content_to_file(file_path=code_file, content=gen_code)
         print(f'-> 生成代码写入【完成】')
-        print(f'-> 测试代码写入文件【{code_file}】...')
+        print(f'-> 测试代码写入文件【{test_file}】...')
         test_file = output_content_to_file(file_path=test_file, content=test_code)
         print(f'-> 测试代码写入【完成】')
 
