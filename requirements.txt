@@ -17,6 +17,7 @@ pandas # excel 识别用
 docx2txt # doc 解析用
 chardet>=5.2.0 # 继续文本自动判断字符集用
 PyMuPDF>=1.25.5
+python-docx # docx 文档读写
 xinference
 langchain_weaviate
 # textract==1.6.3
