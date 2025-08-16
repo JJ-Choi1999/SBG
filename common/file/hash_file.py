@@ -10,7 +10,7 @@ def get_device_id():
     mac = uuid.getnode()
     return format(mac, '012x')  # 格式化为12位十六进制MAC地址
 
-def calculate_file_hash(file_path, algorithm='sha256'):
+def calculate_file_hash(file_path: str, algorithm: str = 'sha256'):
     """
     计算文件内容或目录路径字符串的哈希值
 
@@ -31,9 +31,9 @@ def calculate_file_hash(file_path, algorithm='sha256'):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
 
-def generate_unique_hash(file_path):
+def generate_unique_hash(file_path: str):
     """
-    合并设备标识与文件哈希
+    合并设备标识与文件哈希, 返回文件的唯一哈希值(用于发布式存储)
     :param file_path:
     :return:
     """

@@ -4,16 +4,28 @@ import os
 import re
 import sys
 import time
-
-from pathlib import Path
-from typing import Iterator, Union
-
 import pandas as pd
 import requests
 
+from pathlib import Path
+from typing import Iterator, Union
 from bs4 import BeautifulSoup
 
-IMG_FORMAT = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg', '.gif', '.jxl', '.heic', '.heif', '.tiff', '.tif', '.png']
+IMG_FORMAT = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.webp',
+    '.avif',
+    '.svg',
+    '.gif',
+    '.jxl',
+    '.heic',
+    '.heif',
+    '.tiff',
+    '.tif',
+    '.png'
+]
 
 def iter_file_infos(file_path: Union[str, Path] , filter_suffix: list[str] = []) -> Iterator[dict[str, Union[str, Path]]]:
     """

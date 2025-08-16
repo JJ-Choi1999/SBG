@@ -23,6 +23,7 @@ langchain_weaviate
 # textract==1.6.3
 redis
 pdf2docx==0.5.8
+filetype==1.2.0
 
 # 以下命令根据是否需要使用GPU来判断是否需要执行
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
