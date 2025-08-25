@@ -1,6 +1,12 @@
+import os.path
+
+import lxml
 from docx import Document
 from xml.etree import ElementTree as ET
 from xml.dom import minidom
+
+from docx.opc.oxml import BaseOxmlElement
+from docx.oxml import CT_Document
 
 
 def generate_and_pretty_print_xml(docx_path):
@@ -12,6 +18,8 @@ def generate_and_pretty_print_xml(docx_path):
 
     # 获取文档的 XML 元素
     xml_element = doc._element
+    doc._element = lxml.etree.fromstring(xml_element.xml)
+    print(xml_element.xml)
 
     # 将 XML 元素转换为字符串
     xml_str = ET.tostring(xml_element, encoding="utf-8")
@@ -22,9 +30,19 @@ def generate_and_pretty_print_xml(docx_path):
 
     # 去除多余的空行
     lines = [line for line in pretty_xml.splitlines() if line.strip()]
-    print("\n".join(lines))
 
-docx_path = r'D:\AiAgent\SBG\common\file\document_extra\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.docx'
+    with open(os.path.join(os.getcwd(), f'extra.xml'), 'w', encoding='utf-8') as f:
+        f.write("\n".join(lines))
+
+    file_path = os.path.join(
+        os.path.dirname(docx_path),
+        f'{os.path.splitext(os.path.basename(docx_path))[0]}_1.docx'
+    )
+    doc.save(file_path)
+
+# docx_path = r'D:\AiAgent\SBG\common\file\document_extra\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.docx'
+docx_path = r"C:\Users\Lenovo\Desktop\02.SI SoW Master For CBS Upgrade Project_V1.0_Final[Cleaned].docx"
+
 # with open(docx_path, 'rb') as f:
 #     # print(f.read())
 #     bd = f.read()

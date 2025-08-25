@@ -23,7 +23,17 @@ def replace_table_text(docx_path, old_text, new_text):
     return docx_path
 
 if __name__ == '__main__':
-    # 示例：替换段落中的 "旧文字" 为 "新文字"
-    replace_paragraph_text("example.docx", "旧文字", "新文字")
-    # 示例：替换表格中的 "旧文字" 为 "新文字"
-    replace_table_text("example.docx", "旧文字", "新文字")
+    # # 示例：替换段落中的 "旧文字" 为 "新文字"
+    # replace_paragraph_text("example.docx", "旧文字", "新文字")
+    # # 示例：替换表格中的 "旧文字" 为 "新文字"
+    # replace_table_text("example.docx", "旧文字", "新文字")
+
+    docx_path = r"C:\Users\Lenovo\Desktop\esunfhc_annual_2024.docx"
+    docx = Document(docx_path)
+    for para in docx.paragraphs:
+        print(f'para.text:', para.text)
+
+    for table in docx.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                print(f'cell.text:', cell.text)
