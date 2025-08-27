@@ -39,15 +39,3 @@ def generate_and_pretty_print_xml(docx_path):
         f'{os.path.splitext(os.path.basename(docx_path))[0]}_1.docx'
     )
     doc.save(file_path)
-
-# docx_path = r'D:\AiAgent\SBG\common\file\document_extra\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.docx'
-docx_path = r"C:\Users\Lenovo\Desktop\02.SI SoW Master For CBS Upgrade Project_V1.0_Final[Cleaned].docx"
-
-# with open(docx_path, 'rb') as f:
-#     # print(f.read())
-#     bd = f.read()
-#
-# with open(docx_path, 'wb') as f:
-#     f.write(bd)
-
-generate_and_pretty_print_xml(docx_path)
