@@ -5,7 +5,7 @@ import uuid
 from typing import Annotated, List
 from pydantic import BaseModel, Field
 
-from common.config.config import YAML_CONFIGS_INFO
+from common.config import YAML_CONFIGS_INFO
 from core.state.base_state import BaseState
 
 ENABLE_MUTUAL = YAML_CONFIGS_INFO['code_helper']['mutual_config']['enable_mutual']

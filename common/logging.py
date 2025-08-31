@@ -2,7 +2,7 @@ import logging
 import os.path
 from logging.handlers import RotatingFileHandler
 
-from common.config.config import YAML_CONFIGS_INFO
+from common.config import YAML_CONFIGS_INFO
 
 
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from api.models.llm_model import Chat, Feedback
-from common.logger.logging import Logger
+from common.logging import Logger
 
 logger = Logger.get_instance(__file__)
 router = APIRouter(prefix="/format_result", tags=["format_result 对话管理"])
