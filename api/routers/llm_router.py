@@ -1,21 +1,28 @@
 from fastapi import APIRouter
 from api.models.llm_model import Chat, Feedback
+from common.handlers.rsp_handler import rsp_handler
 from common.logging import Logger
 
 logger = Logger.get_instance(__file__)
 router = APIRouter(prefix="/format_result", tags=["format_result 对话管理"])
 
 @router.get("/history", summary="获取llm 历史对话信息")
+@rsp_handler
 async def llm_history(id: int = 0, status: str = "done", tags: str = ""):
     logger.info('获取llm 历史对话信息【请求成功】')
+    # return {
+    #     "code": 200,
+    #     "msg": "success",
+    #     "data": {
+    #         "id": id,
+    #         "status": status,
+    #         "tags": tags.split(',')
+    #     }
+    # }
     return {
-        "code": 200,
-        "msg": "success",
-        "data": {
-            "id": id,
-            "status": status,
-            "tags": tags.split(',')
-        }
+        "id": id,
+        "status": status,
+        "tags": tags.split(',')
     }
 
 @router.post("/chat", summary="对话")

@@ -2,9 +2,9 @@ import logging
 import os.path
 from logging.handlers import RotatingFileHandler
 
-from common.config import YAML_CONFIGS_INFO
+from common.config.config import Config
 
-
+_CONFIG = Config()
 
 class Logger:
 
@@ -16,15 +16,15 @@ class Logger:
         default_log_path = os.path.join(project_path, 'logs', 'app.log')
 
         # 初始化 log 文件夹
-        log_file = YAML_CONFIGS_INFO.get('log_config', {}).get('LOG_FILE')
+        log_file = _CONFIG.get('log_config', {}).get('LOG_FILE')
         log_file = log_file if log_file else default_log_path
         log_dir = os.path.dirname(log_file)
         os.makedirs(log_dir, exist_ok=True)
 
         # 获取log 配置参数
-        max_bytes = YAML_CONFIGS_INFO.get('log_config', {}).get('LOG_FILE_MAX_SIZE') * 1024 * 1024
-        backup_count = YAML_CONFIGS_INFO.get('log_config', {}).get('LOG_FILE_BACKUP_COUNT')
-        format = YAML_CONFIGS_INFO.get('log_config', {}).get('LOG_FORMAT')
+        max_bytes = _CONFIG.get('log_config', {}).get('LOG_FILE_MAX_SIZE') * 1024 * 1024
+        backup_count = _CONFIG.get('log_config', {}).get('LOG_FILE_BACKUP_COUNT')
+        format = _CONFIG.get('log_config', {}).get('LOG_FORMAT')
 
         # 创建日志器
         file_name = os.path.split(file_path)[1]
