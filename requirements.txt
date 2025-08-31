@@ -1,6 +1,7 @@
 weaviate-client
 fastapi
 uvicorn
+PyYaml
 langchain
 langgraph
 langchain_openai
