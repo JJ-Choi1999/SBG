@@ -58,7 +58,7 @@ def remove_pdf_images(origin_pdf: str, transform_pdf: str = None, del_origin_pdf
     :return:
     """
     if not transform_pdf:
-        transform_pdf = os.path.join(os.getcwd(), f'{str(uuid.uuid1())}.pdf')
+        transform_pdf = os.path.join(os.path.dirname(origin_pdf), f'{str(uuid.uuid1())}.pdf')
 
     with fitz.open(origin_pdf) as pdf_obj:
 
