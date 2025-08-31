@@ -4,21 +4,13 @@ from common.handlers.rsp_handler import rsp_handler
 from common.logging import Logger
 
 logger = Logger.get_instance(__file__)
-router = APIRouter(prefix="/format_result", tags=["format_result 对话管理"])
+router = APIRouter(prefix="/llm", tags=["llm 对话管理"])
+
 
 @router.get("/history", summary="获取llm 历史对话信息")
 @rsp_handler
 async def llm_history(id: int = 0, status: str = "done", tags: str = ""):
     logger.info('获取llm 历史对话信息【请求成功】')
-    # return {
-    #     "code": 200,
-    #     "msg": "success",
-    #     "data": {
-    #         "id": id,
-    #         "status": status,
-    #         "tags": tags.split(',')
-    #     }
-    # }
     return {
         "id": id,
         "status": status,
@@ -26,29 +18,20 @@ async def llm_history(id: int = 0, status: str = "done", tags: str = ""):
     }
 
 @router.post("/chat", summary="对话")
+@rsp_handler
 async def llm_chat(chat: Chat):
-    return {
-        "code": 200,
-        "msg": "success",
-        "data": chat
-    }
+    return chat
 
 @router.put("/feedback", summary="反馈")
+@rsp_handler
 async def llm_feedback(feedback: Feedback):
-    return {
-        "code": 200,
-        "msg": "success",
-        "data": feedback
-    }
+    return feedback
 
 @router.delete("/del", summary="删除记录")
+@rsp_handler
 async def llm_del(id: int=0, chat_id: int=0, record_id: int=0):
     return {
-        "code": 200,
-        "msg": "success",
-        "data": {
-            "id": id,
-            "chat_id": chat_id,
-            "record_id": record_id
-        }
+        "id": id,
+        "chat_id": chat_id,
+        "record_id": record_id
     }
