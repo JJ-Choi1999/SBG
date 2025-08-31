@@ -1,5 +1,3 @@
-
-```python
 import yaml
 import os
 import requests
@@ -73,4 +71,4 @@ class NacosClient:
             return response.text
         except requests.exceptions.RequestException as e:
             return f"Error: {str(e)}"
-```
+
