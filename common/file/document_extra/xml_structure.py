@@ -2,7 +2,7 @@ from lxml import etree
 
 import lxml
 
-xml_path = r'D:\AiAgent\SBG\common\file\document_extra\extra.xml'
+xml_path = r'/test_files/extra.xml'
 with open(xml_path, 'r', encoding='utf-8') as f:
     data = f.read()
 

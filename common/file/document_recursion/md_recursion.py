@@ -73,7 +73,7 @@ def extra_md_prompts(company_name: str, md_path: str) -> tuple[list[str], list[d
     return md_prompts, md_prompts_maps
 
 if __name__ == '__main__':
-    md_path = r'D:\AiAgent\SBG\common\file\document_recursion\征信报告模板.md'
+    md_path = r'/test_files/征信报告模板.md'
     # with open(md_path, 'r', encoding='utf-8') as f:
     #     text = f.read()
     #

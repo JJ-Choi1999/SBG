@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # pdf_path = r'D:\AiAgent\SBG\common\file\document_extra\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.pdf'
     # docx_path = pdf_to_docx(pdf_path)
     # # print(f'docx_path:', docx_path)
-    docx_path = r'D:\AiAgent\SBG\common\file\document_extra\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.docx'
+    docx_path = r'/test_files/Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A_.docx'
     # # para_texts = extra_paragraph(docx_path)
     # #
     # # print(json.dumps(para_texts, ensure_ascii=False, indent=2))

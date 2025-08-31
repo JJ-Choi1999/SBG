@@ -24,6 +24,8 @@ langchain_weaviate
 redis
 pdf2docx==0.5.8
 filetype==1.2.0
-docx2markdown_custom
+docx2markdown_custom # docx 转 markdown
+docx2markdown # docx 转 markdown
+markdown # md 转 html
 # 以下命令根据是否需要使用GPU来判断是否需要执行
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
