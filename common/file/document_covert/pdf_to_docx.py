@@ -1,5 +1,6 @@
 import os
 import fitz
+import uuid
 
 from pdf2docx import Converter
 
@@ -17,6 +18,9 @@ def pdf_to_docx(pdf_path: str, start_num: int = 0, end_num: int | None = None, d
     """
     if not docx_path:
         docx_path = os.path.join(os.path.dirname(pdf_path), f'{os.path.splitext(os.path.basename(pdf_path))[0]}.docx')
+
+    # 删除PDF中所有图片
+    pdf_path = remove_pdf_images(origin_pdf=pdf_path, del_origin_pdf=True)
 
     # 创建转换器对象
     cv = Converter(pdf_path)
@@ -44,6 +48,32 @@ def convert_pdf_images_to_rgb(pdf_path, output_pdf_path):
         doc.save(output_pdf_path)  # 保存为新 PDF
 
     return output_pdf_path
+
+def remove_pdf_images(origin_pdf: str, transform_pdf: str = None, del_origin_pdf: bool = False) -> str:
+    """
+    删除PDF图片
+    :param origin_pdf: 原PDF路径
+    :param transform_pdf: 转换后PDF路径
+    :param del_origin_pdf: 是否删除原PDF
+    :return:
+    """
+    if not transform_pdf:
+        transform_pdf = os.path.join(os.getcwd(), f'{str(uuid.uuid1())}.pdf')
+
+    with fitz.open(origin_pdf) as pdf_obj:
+
+        # 迭代获取 PDF 的每一页并删除对应的图片
+        for pdf_page in pdf_obj:
+            imgs = pdf_page.get_images(full=True)
+            for img in reversed(imgs):
+                pdf_page.delete_image(img[0])
+
+        pdf_obj.save(transform_pdf)
+
+    if del_origin_pdf:
+        os.remove(origin_pdf)
+
+    return transform_pdf
 
 if __name__ == '__main__':
     import json
@@ -74,6 +104,6 @@ if __name__ == '__main__':
     convert_path = pdf_to_docx(
         pdf_path=out_pdf_path,
         start_num=0,
-        end_num=5
+        # end_num=5
     )
     # convert_pdf_images_to_rgb(pdf_path, out_pdf_path)
