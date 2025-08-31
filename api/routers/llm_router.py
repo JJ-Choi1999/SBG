@@ -7,6 +7,7 @@ router = APIRouter(prefix="/format_result", tags=["format_result 对话管理"])
 
 @router.get("/history", summary="获取llm 历史对话信息")
 async def llm_history(id: int = 0, status: str = "done", tags: str = ""):
+    logger.info('获取llm 历史对话信息【请求成功】')
     return {
         "code": 200,
         "msg": "success",
