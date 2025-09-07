@@ -77,9 +77,9 @@ def remove_pdf_images(origin_pdf: str, transform_pdf: str = None, del_origin_pdf
 
 if __name__ == '__main__':
     import json
-    pdf_path: str = r"C:\Users\Lenovo\Downloads\esunfhc_annual_2024.pdf"
+    pdf_path: str = r"C:\Users\Lenovo\Desktop\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A__1.pdf"
     # pdf_path = r"E:\downloads\玄姐AGI-三天训练营\Day1\大模型应用开发项目实战训练营——Agent开发篇.pdf"
-    out_pdf_path = r'D:\AiAgent\SBG\common\file\document_covert\output_rgb_converted.pdf'
+    # out_pdf_path = r'D:\AiAgent\SBG\common\file\document_covert\output_rgb_converted.pdf'
     file_type_info = extract_file_type(pdf_path)
     file_path_info = extract_file_path(pdf_path)
     print(json.dumps(file_type_info, ensure_ascii=False, indent=2))
@@ -102,8 +102,8 @@ if __name__ == '__main__':
 
     # output_pdf_path = os.path.join(os.path.dirname(pdf_path), f'output_{os.path.basename(pdf_path)}')
     convert_path = pdf_to_docx(
-        pdf_path=out_pdf_path,
-        start_num=0,
+        pdf_path=pdf_path,
+        # start_num=0,
         # end_num=5
     )
     # convert_pdf_images_to_rgb(pdf_path, out_pdf_path)

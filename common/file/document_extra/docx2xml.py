@@ -32,10 +32,15 @@ def generate_and_pretty_print_xml(docx_path):
     lines = [line for line in pretty_xml.splitlines() if line.strip()]
 
     with open(os.path.join(os.getcwd(), f'extra.xml'), 'w', encoding='utf-8') as f:
-        f.write("\n".join(lines))
+        # f.write("\n".join(lines))
+        f.write(xml_element.xml)
 
     file_path = os.path.join(
         os.path.dirname(docx_path),
         f'{os.path.splitext(os.path.basename(docx_path))[0]}_1.docx'
     )
     doc.save(file_path)
+
+if __name__ == '__main__':
+    docx_path = r"C:\Users\Lenovo\Desktop\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A__1.docx"
+    generate_and_pretty_print_xml(docx_path)
