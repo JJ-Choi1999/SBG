@@ -1,6 +1,10 @@
 from docx import Document
+from docx.enum.dml import MSO_THEME_COLOR_INDEX
+from docx.opc.constants import RELATIONSHIP_TYPE
+from docx.oxml import OxmlElement
 from docx.text.hyperlink import Hyperlink
 from docx.text.paragraph import Paragraph
+from docx.opc.oxml import qn
 
 
 def extra_hyperlink(para: Paragraph, para_text: str, docx: Document):
@@ -13,7 +17,6 @@ def extra_hyperlink(para: Paragraph, para_text: str, docx: Document):
     """
     if not para._p.xpath('.//w:hyperlink'): return {}
     hl = Hyperlink(para._p.xpath('.//w:hyperlink')[0], docx)
-
     return {
         'hl_text': hl.text,
         'hl_url': hl.url,
@@ -41,13 +44,10 @@ def extra_paragraph(docx_path):
         if hl_index == -1 and hl_url:
             para_text = ''
             for run in para.runs:
-                run_text = run.text
-                if not is_flag and not run_text:
-                    run_text = hl_url
+                if not is_flag and not run.text:
+                    run.text = hl_url
                     is_flag = True
-                para_text += run_text
-            para.text = para_text
-
+                para_text += run.text
         para_texts.append(para.text)
 
     docx.save(docx_path)
