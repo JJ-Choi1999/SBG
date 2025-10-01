@@ -1,6 +1,7 @@
 import os
 import fitz
 import uuid
+import shutil
 
 from pdf2docx import Converter
 
@@ -20,7 +21,7 @@ def pdf_to_docx(pdf_path: str, start_num: int = 0, end_num: int | None = None, d
         docx_path = os.path.join(os.path.dirname(pdf_path), f'{os.path.splitext(os.path.basename(pdf_path))[0]}.docx')
 
     # 删除PDF中所有图片
-    pdf_path = remove_pdf_images(origin_pdf=pdf_path, del_origin_pdf=True)
+    pdf_path = remove_pdf_images(origin_pdf=pdf_path, del_origin_pdf=False)
 
     # 创建转换器对象
     cv = Converter(pdf_path)
@@ -33,10 +34,19 @@ def pdf_to_docx(pdf_path: str, start_num: int = 0, end_num: int | None = None, d
     return docx_path
 
 def convert_pdf_images_to_rgb(pdf_path, output_pdf_path):
+
+    dir_path = os.path.join(os.getcwd(), 'output_imgs', str(uuid.uuid1()))
+    os.makedirs(dir_path, exist_ok=True)
+
     with fitz.open(pdf_path) as doc:
         for page in doc:
             for img in page.get_images(full=True):
                 xref = img[0]
+
+                bbox = page.get_image_bbox(img)  # 获取图片的边界框
+                print(f'img bbox:', bbox)
+                print(page.get_image_info(page))
+
                 base_image = doc.extract_image(xref)
                 image_data = base_image["image"]
                 # 使用 PIL 转换为 RGB 格式
@@ -44,7 +54,14 @@ def convert_pdf_images_to_rgb(pdf_path, output_pdf_path):
                 from io import BytesIO
                 pil_img = Image.open(BytesIO(image_data))
                 pil_img = pil_img.convert("RGB")  # 强制转为 RGB
-                pil_img.save(f"temp_{xref}.jpg", "JPEG")  # 保存为 JPEG（RGB 格式）
+
+                file_path = os.path.join(dir_path, f'temp_{xref}.png')
+                pil_img.save(file_path, "PNG")  # 保存为 JPEG（RGB 格式）
+
+                page.delete_image(xref)  # 删除原图
+
+                page.insert_image(bbox, filename=file_path)  # 插入新图片
+
         doc.save(output_pdf_path)  # 保存为新 PDF
 
     return output_pdf_path
@@ -77,13 +94,13 @@ def remove_pdf_images(origin_pdf: str, transform_pdf: str = None, del_origin_pdf
 
 if __name__ == '__main__':
     import json
-    pdf_path: str = r"C:\Users\Lenovo\Desktop\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A__1.pdf"
-    # pdf_path = r"E:\downloads\玄姐AGI-三天训练营\Day1\大模型应用开发项目实战训练营——Agent开发篇.pdf"
-    # out_pdf_path = r'D:\AiAgent\SBG\common\file\document_covert\output_rgb_converted.pdf'
-    file_type_info = extract_file_type(pdf_path)
-    file_path_info = extract_file_path(pdf_path)
-    print(json.dumps(file_type_info, ensure_ascii=False, indent=2))
-    print(json.dumps(file_path_info, ensure_ascii=False, indent=2))
+    # pdf_path: str = r"C:\Users\Lenovo\Desktop\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A__1.pdf"
+    # # pdf_path = r"E:\downloads\玄姐AGI-三天训练营\Day1\大模型应用开发项目实战训练营——Agent开发篇.pdf"
+    out_pdf_path = r'D:\AiAgent\SBG\common\file\document_covert\output_rgb_converted.pdf'
+    # file_type_info = extract_file_type(pdf_path)
+    # file_path_info = extract_file_path(pdf_path)
+    # print(json.dumps(file_type_info, ensure_ascii=False, indent=2))
+    # print(json.dumps(file_path_info, ensure_ascii=False, indent=2))
 
     # for i in range(len(steps) - 1):
     #     print(f'[{steps[i]}: {steps[i+1]}]')
@@ -101,9 +118,11 @@ if __name__ == '__main__':
     #     print(f'docx_path:', docx_path, ', convert_path:', convert_path)
 
     # output_pdf_path = os.path.join(os.path.dirname(pdf_path), f'output_{os.path.basename(pdf_path)}')
+    pdf_path = r"D:\AiAgent\SBG\common\file\document_covert\Clearstream FAQs – Clearing mandate for U.S. Treasury securities – U.S.A__1.pdf"
     convert_path = pdf_to_docx(
         pdf_path=pdf_path,
         # start_num=0,
         # end_num=5
     )
+    print(f'convert_path:', convert_path)
     # convert_pdf_images_to_rgb(pdf_path, out_pdf_path)
