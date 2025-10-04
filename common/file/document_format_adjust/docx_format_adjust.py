@@ -171,6 +171,10 @@ class DocxFormatAdjust:
                     for run in para.runs:
                         run.italic = True
 
+                if fr_key == 'is_underline' and fr_val:
+                    for run in para.runs:
+                        run.underline = True
+
                 if fr_key == 'zh_font' and fr_val:
                     for run in para.runs:
                         try:
