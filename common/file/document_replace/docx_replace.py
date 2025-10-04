@@ -1,6 +1,8 @@
 import numpy as np
+import xml.etree.ElementTree as ET
+
 from docx import Document
-from docx.table import Table
+from docx.table import Table, _Cell
 
 
 def replace_paragraph_text(docx_path, old_text, new_text):
@@ -25,11 +27,40 @@ def replace_table_text(docx_path, old_text, new_text):
 
     return docx_path
 
-def merge_cells_by_value(table: Table, merged_arr: np.ndarray) -> Table:
+def is_merged_cell(cell: _Cell):
+    """
+    判断单元格是否为合并单元格（横向或纵向）
+    """
+    # 获取单元格的 XML 元素
+    xml_cell = cell._element
+    xml_str = ET.tostring(xml_cell, encoding='utf-8').decode('utf-8')
+
+    # 检查是否有横向合并（w:gridSpan）
+    if ':gridSpan' in xml_str:
+        return True
+
+    # 检查是否有纵向合并（w:merge）
+    if ':vMerge' in xml_str:
+        return True
+
+    return False
+
+def merge_cells_by_value(table: Table) -> Table:
     """
     合并表格中内容相同的相邻单元格（包括行方向和列方向）
     :param table: 表格对象
     """
+    # 初始化合并矩阵
+    merged_arr = np.zeros((len(table.rows), len(table.columns)), dtype=bool)
+
+    # 记录合并矩阵, 需要合并单元格信息
+    for row_index, row in enumerate(table.rows):
+        for cell_index, cell in enumerate(row.cells):
+            # 记录需要合并的单元格
+            is_merge = is_merged_cell(cell)
+            if is_merge:
+                merged_arr[row_index, cell_index] = is_merge
+
     # 首先处理行方向的合并
     for col_index in range(len(table.columns)):
         start_row = 0
