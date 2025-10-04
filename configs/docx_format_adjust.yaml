@@ -1,0 +1,24 @@
+default:
+  Normal:
+    - regular: '^关于.*?的汇报.*'
+      line_spacing: 29
+      space_before: 0.5
+      space_after: 0.5
+      zh_font: STZhongsong
+      font_size: 20
+      is_bold: true
+      is_break: true
+
+    - regular: '^汇报部门.*'
+      line_spacing: 29
+      zh_font: STKaiti
+      font_size: 16
+      is_bold: true
+      is_break: true
+
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: FangSong
+      en_font: 'Times New Roman'
+      font_size: 16
+      is_bold: false

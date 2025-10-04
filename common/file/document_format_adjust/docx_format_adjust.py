@@ -29,6 +29,7 @@ class DocxFormatAdjust:
                         'zh_font': 'STZhongsong',
                         'font_size': 20,
                         'is_bold': True,
+                        'is_italic': False,
                         'is_break': True,
                     },
                     {
@@ -165,6 +166,10 @@ class DocxFormatAdjust:
                 if fr_key == 'is_bold' and fr_val:
                     for run in para.runs:
                         run.bold = True
+
+                if fr_key == 'is_italic' and fr_val:
+                    for run in para.runs:
+                        run.italic = True
 
                 if fr_key == 'zh_font' and fr_val:
                     for run in para.runs:
