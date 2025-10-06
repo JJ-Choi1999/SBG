@@ -150,12 +150,14 @@ class DocxFormatAdjust:
         self.__docx.save(self.__output_docx)
 
     def format_adjust_header(self, style_name: str = 'page_header'):
-        print(f'format_adjust_header self.__docx.sections: {len(self.__docx.sections)}')
+
         for section in self.__docx.sections:
             header = section.header
-            if not header.paragraphs: header.add_paragraph(text='header_holder')
+            if not header.paragraphs:
+                header.add_paragraph(text='header_holder')
 
             for para in header.paragraphs:
+                if not para.text: para.text = 'header_holder'
                 format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
                 if not format_rules: continue
                 self.__format_adjust_para(para=para, format_rules=format_rules)
@@ -168,6 +170,7 @@ class DocxFormatAdjust:
                 footer.add_paragraph(text='footer_holder')
 
             for para in footer.paragraphs:
+                if not para.text: para.text = 'footer_holder'
                 format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
                 if not format_rules: continue
 
