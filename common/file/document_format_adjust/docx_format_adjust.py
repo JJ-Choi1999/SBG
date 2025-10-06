@@ -1,6 +1,7 @@
 import re
 
 from docx import Document
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.shared import Length, Pt, Inches
 from docx.text.paragraph import Paragraph
@@ -10,11 +11,20 @@ from common.file.document_replace.docx_replace import merge_cells_by_value
 
 class DocxFormatAdjust:
 
-    def __init__(self, input_docx: str, output_docx: str = None, format_type: str = 'default'):
+    def __init__(
+        self,
+        input_docx: str,
+        output_docx: str = None,
+        format_type: str = 'default',
+        header_style: str = 'page_header',
+        footer_style: str = 'page_footer'
+    ):
 
         self.__input_docx = input_docx
         self.__output_docx = output_docx
         self.__format_type = format_type
+        self.__header_style = header_style
+        self.__footer_style = footer_style
 
         if not self.__output_docx: self.__output_docx = self.__input_docx
 
@@ -22,7 +32,7 @@ class DocxFormatAdjust:
             'default': {
                 'Normal': [
                     {
-                        'regular':  r'^关于.*?的汇报.*',
+                        'regular': r'^关于.*?的汇报.*',
                         'line_spacing': 29,
                         'space_before': 0.5,
                         'space_after': 0.5,
@@ -105,23 +115,74 @@ class DocxFormatAdjust:
                         'font_size': 16,
                         'is_bold': False,
                     }
-                ]
+                ],
+                'page_header': [
+                    {
+                        'para_text': '文档密级',
+                        'alignment': WD_PARAGRAPH_ALIGNMENT.LEFT,
+                        'font_size': 18,
+                        'zh_font': 'Kaiti',
+                        'en_font': 'Times New Roman',
+                    }
+                ],
+                'page_footer': [
+                    {
+                        # 'para_text': '文档密级',
+                        'record_page': True,
+                        'alignment': WD_PARAGRAPH_ALIGNMENT.CENTER,
+                        'font_size': 10,
+                        'zh_font': 'Kaiti',
+                        'en_font': 'Times New Roman',
+                    }
+                ],
             }
         }
 
         self.__docx = Document(self.__input_docx)
 
     def run(self):
+
+        self.format_adjust_header(style_name=self.__header_style)
+        self.format_adjust_footer(style_name=self.__footer_style)
         self.format_adjust_paras()
         self.format_adjust_tables()
+
         self.__docx.save(self.__output_docx)
+
+    def format_adjust_header(self, style_name: str = 'page_header'):
+        print(f'format_adjust_header self.__docx.sections: {len(self.__docx.sections)}')
+        for section in self.__docx.sections:
+            header = section.header
+            if not header.paragraphs: header.add_paragraph(text='header_holder')
+
+            for para in header.paragraphs:
+                format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
+                if not format_rules: continue
+                self.__format_adjust_para(para=para, format_rules=format_rules)
+
+    def format_adjust_footer(self, style_name: str = 'page_footer'):
+
+        for section_index, section in enumerate(self.__docx.sections):
+            footer = section.footer
+            if not footer.paragraphs:
+                footer.add_paragraph(text='footer_holder')
+
+            for para in footer.paragraphs:
+                format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
+                if not format_rules: continue
+
+                if format_rules[0].get('record_page'):
+                    format_rules[0]['para_text'] = f'{section_index + 1} / {len(self.__docx.sections)}'
+
+                self.__format_adjust_para(para=para, format_rules=format_rules)
 
     def format_adjust_tables(self):
         for table in self.__docx.tables:
             for row in table.rows:
                 for cell in row.cells:
                     for para in cell.paragraphs:
-                        format_rules = self.__format_map.get(self.__format_type, {}).get(f'[Table.Cell]{para.style.name}', [])
+                        format_rules = self.__format_map.get(self.__format_type, {}).get(
+                            f'[Table.Cell]{para.style.name}', [])
                         if not format_rules: continue
                         self.__format_adjust_para(para=para, format_rules=format_rules)
 
@@ -166,6 +227,9 @@ class DocxFormatAdjust:
                 if fr_key == 'alignment' and fr_val:
                     para.alignment = fr_val
 
+                if fr_key == 'para_text' and fr_val:
+                    para.text = fr_val
+
                 if fr_key == 'is_bold' and fr_val:
                     for run in para.runs:
                         run.bold = True
@@ -186,7 +250,6 @@ class DocxFormatAdjust:
                             run._element.rPr.rFonts.set(qn('w:eastAsia'), fr_val)
                         except Exception as e:
                             print(f'para.style.name: {para.style.name}, 异常文本: {run.text}')
-
 
                 if fr_key == 'en_font' and fr_val:
                     for run in para.runs:
