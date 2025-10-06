@@ -163,6 +163,9 @@ class DocxFormatAdjust:
                     # 0.2 英寸越等于一个字符
                     para.paragraph_format.first_line_indent = Inches(round(fr_val * 0.2, 2))
 
+                if fr_key == 'alignment' and fr_val:
+                    para.alignment = fr_val
+
                 if fr_key == 'is_bold' and fr_val:
                     for run in para.runs:
                         run.bold = True
