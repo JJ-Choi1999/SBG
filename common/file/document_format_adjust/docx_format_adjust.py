@@ -2,6 +2,7 @@ import re
 
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.oxml import parse_xml
 from docx.oxml.ns import qn
 from docx.shared import Length, Pt, Inches
 from docx.text.paragraph import Paragraph
@@ -164,20 +165,74 @@ class DocxFormatAdjust:
 
     def format_adjust_footer(self, style_name: str = 'page_footer'):
 
-        for section_index, section in enumerate(self.__docx.sections):
+        # for section_index, section in enumerate(self.__docx.sections):
+        #     footer = section.footer
+        #
+        #     if not footer.paragraphs:
+        #         footer.add_paragraph(text='footer_holder')
+        #
+        #     for para in footer.paragraphs:
+        #         if not para.text: para.text = 'footer_holder'
+        #         format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
+        #         if not format_rules: continue
+        #
+        #         if format_rules[0].get('record_page'):
+        #             format_rules[0]['para_text'] = f'{section_index + 1} / {len(self.__docx.sections)}'
+        #
+        #         self.__format_adjust_para(para=para, format_rules=format_rules)
+        #
+        #
+
+
+        # 获取所有节
+        for section in self.__docx.sections:
+            # 获取页脚
             footer = section.footer
-            if not footer.paragraphs:
-                footer.add_paragraph(text='footer_holder')
+            # 清除现有页脚内容
+            for paragraph in footer.paragraphs:
+                paragraph.clear()
 
-            for para in footer.paragraphs:
-                if not para.text: para.text = 'footer_holder'
-                format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
-                if not format_rules: continue
+            # 创建新的页脚段落
+            p = footer.paragraphs[0]
+            p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER  # 居中对齐
 
-                if format_rules[0].get('record_page'):
-                    format_rules[0]['para_text'] = f'{section_index + 1} / {len(self.__docx.sections)}'
+            # 设置字体大小
+            for run in p.runs:
+                run.font.size = Pt(10)
 
-                self.__format_adjust_para(para=para, format_rules=format_rules)
+            # 添加页码和总页数域
+            run = p.add_run()
+            # 构建页码和总页数域的XML
+            xml = (
+                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                '<w:fldChar w:fldCharType="begin" w:dirty="1"/>'
+                '<w:instrText xml:space="preserve"> PAGE </w:instrText>'
+                '<w:fldChar w:fldCharType="separate"/>'
+                '<w:fldChar w:fldCharType="end"/>'
+                '</w:r>'
+            )
+            # 正确的添加方式
+            run._element.append(parse_xml(xml))
+
+            # 构建页码和总页数域的XML
+            xml = (
+                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                '<w:t xml:space="preserve"> / </w:t>'
+                '</w:r>'
+            )
+            # 正确的添加方式
+            run._element.append(parse_xml(xml))
+            # 构建页码和总页数域的XML
+            xml = (
+                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                '<w:fldChar w:fldCharType="begin" w:dirty="1"/>'
+                '<w:instrText xml:space="preserve"> NUMPAGES </w:instrText>'
+                '<w:fldChar w:fldCharType="separate"/>'
+                '<w:fldChar w:fldCharType="end"/>'
+                '</w:r>'
+            )
+            # 正确的添加方式
+            run._element.append(parse_xml(xml))
 
     def format_adjust_tables(self):
         for table in self.__docx.tables:
