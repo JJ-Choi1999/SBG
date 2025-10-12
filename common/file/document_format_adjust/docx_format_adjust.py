@@ -2,7 +2,7 @@ import json
 import re
 
 from docx import Document
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_LINE_SPACING
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn
 from docx.shared import Length, Pt, Inches, RGBColor
@@ -142,6 +142,9 @@ class DocxFormatAdjust:
 
                 if fr_key == 'line_spacing' and fr_val is not None:
                     para.paragraph_format.line_spacing = Length(fr_val * Length._EMUS_PER_PT)
+
+                if fr_key == 'line_spacing_rule ' and fr_val is not None:
+                    para.paragraph_format.line_spacing_rule = fr_val
 
                 if fr_key == 'space_before' and fr_val is not None:
                     para.paragraph_format.space_before = Pt(round(fr_val * 12, 2))
