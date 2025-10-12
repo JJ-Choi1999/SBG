@@ -3,7 +3,7 @@ import ast
 import pandas as pd
 import json
 
-from numpy import NaN
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_LINE_SPACING
 
 excel_path = r"C:\Users\Lenovo\Downloads\格式調整規則.xlsx"
 # 读取 Excel 文件
@@ -15,6 +15,7 @@ zh2en_map= {
     '段落文本': 'para_text',
     '文本块正则': 'run_regular',
     '水平對齊': 'alignment',
+    '行距(倍數)': 'line_spacing_rule',
     '行距(磅)': 'line_spacing',
     '段前(磅)': 'space_before',
     '段後(磅)': 'space_after',
@@ -29,6 +30,14 @@ zh2en_map= {
     '頁碼xml列表': 'docx_xml'
 }
 
+multiple_map = {
+    1: WD_LINE_SPACING.SINGLE,
+    1.5: WD_LINE_SPACING.ONE_POINT_FIVE,
+    2: WD_LINE_SPACING.DOUBLE,
+    'at_least': WD_LINE_SPACING.AT_LEAST,
+    'exactly': WD_LINE_SPACING.EXACTLY,
+    'multiple': WD_LINE_SPACING.MULTIPLE
+}
 
 # 初始化结果字典
 result = {}
@@ -63,9 +72,12 @@ for _, row in df.iterrows():
         if sub_key in ['docx_xml']:
             sub_val = ast.literal_eval(sub_val)
 
+        if sub_key == 'line_spacing_rule':
+            sub_val = multiple_map[sub_val]
+
         sub_dict[sub_key] = sub_val
 
     # 添加到列表中
     result[a_val][b_val].append(sub_dict)
 
-print(result)
+print(json.dumps(result, ensure_ascii=False, indent=2))
