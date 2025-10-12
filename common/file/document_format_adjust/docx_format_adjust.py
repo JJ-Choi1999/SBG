@@ -35,115 +35,7 @@ class DocxFormatAdjust:
 
         if not self.__output_docx: self.__output_docx = self.__input_docx
 
-        self.__format_map: dict = {
-            'default': {
-                'Normal': [
-                    {
-                        'regular': r'^关于.*?的汇报.*',
-                        'line_spacing': 29,
-                        'space_before': 0.5,
-                        'space_after': 0.5,
-                        'zh_font': 'STZhongsong',
-                        'font_size': 20,
-                        'is_bold': True,
-                        'is_italic': False,
-                        'is_break': True,
-                    },
-                    {
-                        'regular': r'^汇报部门.*',
-                        'line_spacing': 29,
-                        'zh_font': 'STKaiti',
-                        'font_size': 16,
-                        'is_bold': True,
-                        'is_break': True,
-                    },
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'FangSong',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                        'is_bold': False,
-                    }
-                ],
-                'Heading 1': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'SimHei',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                    }
-                ],
-                'Heading 2': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'STKaiti',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                        'is_bold': True,
-                    }
-                ],
-                'Heading 3': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'FangSong',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                    }
-                ],
-                'Heading 4': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'FangSong',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                    }
-                ],
-                'Body Text Indent 2': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'FangSong',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                        'is_bold': False,
-                    }
-                ],
-                '[Table.Cell]Body Text Indent 2': [
-                    {
-                        'line_spacing': 29,
-                        'first_line_indent': 2,
-                        'zh_font': 'FangSong',
-                        'en_font': 'Times New Roman',
-                        'font_size': 16,
-                        'is_bold': False,
-                    }
-                ],
-                'page_header': [
-                    {
-                        'para_text': '文档密级',
-                        'alignment': WD_PARAGRAPH_ALIGNMENT.LEFT,
-                        'font_size': 18,
-                        'zh_font': 'Kaiti',
-                        'en_font': 'Times New Roman',
-                    }
-                ],
-                'page_number': [
-                    {
-                        # 'para_text': '文档密级',
-                        'record_page': True,
-                        'alignment': WD_PARAGRAPH_ALIGNMENT.CENTER,
-                        'font_size': 10,
-                        'zh_font': 'Kaiti',
-                        'en_font': 'Times New Roman',
-                    }
-                ],
-            }
-        }
+        self.__format_map = {'澳門中銀文檔標準模板（2024）': {'Normal': [{'regular': '^关于.*?的汇报.*', 'is_break': 1.0, 'line_spacing': 29.0, 'space_before': 0.5, 'space_after': 0.5, 'zh_font': 'STZhongsong', 'en_font': 'Times New Roman', 'font_size': 20.0, 'is_bold': True, 'is_italic': False}, {'regular': '^汇报部门.*', 'is_break': 1.0, 'line_spacing': 29.0, 'zh_font': 'STKaiti', 'en_font': 'Times New Roman', 'font_size': 16.0, 'is_bold': True}, {'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'FangSong', 'en_font': 'Times New Roman', 'font_size': 16.0, 'is_bold': False}], 'Heading 1': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'SimHei', 'en_font': 'Times New Roman', 'font_size': 16.0}], 'Heading 2': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'STKaiti', 'en_font': 'Times New Roman', 'font_size': 16.0, 'is_bold': True}], 'Heading 3': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'FangSong', 'en_font': 'Times New Roman', 'font_size': 16.0}], 'Heading 4': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'FangSong', 'en_font': 'Times New Roman', 'font_size': 16.0}], 'Body Text Indent 2': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'FangSong', 'en_font': 'Times New Roman', 'font_size': 16.0, 'is_bold': False}], 'Table.Cell Body Text Indent 2': [{'line_spacing': 29.0, 'first_line_indent': 2.0, 'zh_font': 'FangSong', 'en_font': 'Times New Roman', 'font_size': 16.0, 'is_bold': False}], 'page_header': [{'para_text': '文档密级', 'alignment': 0.0, 'zh_font': 'Kaiti', 'en_font': 'Times New Roman', 'font_size': 18.0}], 'page_footer': [{'para_text': '[文件日期]: 2025-10-10', 'alignment': 0.0, 'zh_font': 'Kaiti', 'en_font': 'Times New Roman', 'font_size': 14.0}], 'page_number': [{'alignment': 1.0, 'zh_font': 'Kaiti', 'en_font': 'Times New Roman', 'font_size': 10.0, 'docx_xml': ['<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:fldChar w:fldCharType="begin" w:dirty="1"/><w:instrText xml:space="preserve"> PAGE </w:instrText><w:fldChar w:fldCharType="separate"/><w:fldChar w:fldCharType="end"/></w:r>', '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:t xml:space="preserve"> / </w:t></w:r><w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:fldChar w:fldCharType="begin" w:dirty="1"/><w:instrText xml:space="preserve"> NUMPAGES </w:instrText><w:fldChar w:fldCharType="separate"/><w:fldChar w:fldCharType="end"/></w:r>']}]}, '行長經營管理專題會觀點摘錄（2025年第X號）': {'Normal': [{'regular': '^\\d{4}-\\d{2}-\\d{2}會議觀點摘錄$', 'is_break': 1.0, 'alignment': 1.0, 'zh_font': 'STZhongsong', 'en_font': 'Times New Roman', 'font_size': 22.0}, {'regular': '（僅供參考，不代表會議決策）', 'is_break': 1.0, 'alignment': 1.0, 'zh_font': 'STZhongsong', 'en_font': 'Times New Roman', 'font_size': 12.0}], 'Table.Cell List Paragraph': [{'alignment': 0.0, 'line_spacing': 29.0, 'zh_font': 'PMingLiU', 'en_font': 'Times New Roman', 'font_size': 16.0}], 'page_number': [{'alignment': 1.0, 'zh_font': 'Kaiti', 'en_font': 'Times New Roman', 'font_size': 10.0, 'docx_xml': ['<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:fldChar w:fldCharType="begin" w:dirty="1"/><w:instrText xml:space="preserve"> PAGE </w:instrText><w:fldChar w:fldCharType="separate"/><w:fldChar w:fldCharType="end"/></w:r>']}]}, '行長經營管理專題會會議紀要（2025年第X號）': {'Normal': [{'regular': '^（\\d{4}年第\\d+號）$', 'is_break': 1.0, 'alignment': 1.0, 'zh_font': 'PMingLiU', 'en_font': 'Times New Roman', 'font_size': 14.0, 'is_bold': True}, {'alignment': 3.0, 'line_spacing': 29.0, 'zh_font': 'PMingLiU', 'en_font': 'Times New Roman', 'font_size': 16.0}, {'run_regular': '時間|地點|主持|出席|列席|記錄|議題|內容', 'is_bold': True}]}}
         print(json.dumps(self.__format_map, ensure_ascii=False, indent=2))
 
         self.__docx = Document(self.__input_docx)
@@ -239,13 +131,13 @@ class DocxFormatAdjust:
 
             if is_filter_null and not para.text: continue
 
-            run_regular = format_rule.pop('run_regular', '')
-
             for fr_key, fr_val in format_rule.items():
 
                 if fr_key == 'regular' and fr_val is not None and not re.findall(fr_val, para.text, re.DOTALL): break
 
                 print(f'({rule_index + 1}) para.text: {para.text}, fr_key: {fr_key}, fr_val: {fr_val}')
+
+                run_regular = format_rule.get('run_regular')
 
                 if fr_key == 'line_spacing' and fr_val is not None:
                     para.paragraph_format.line_spacing = Length(fr_val * Length._EMUS_PER_PT)
@@ -342,13 +234,8 @@ if __name__ == '__main__':
     # print(f'regular:', regular)
     # print(f're_result:', re_result)
 
-    input_docx = r'D:\AiAgent\SBG\test\format_adjust\澳門中銀文檔標準模板（2024）_1.docx'
-    output_docx = r'D:\AiAgent\SBG\test\format_adjust\澳門中銀文檔標準模板（2024）_2.docx'
+    input_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會會議紀要（2025年第X號）.docx'
+    output_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會會議紀要（2025年第X號）_1.docx'
 
-    dfa = DocxFormatAdjust(input_docx, output_docx)
+    dfa = DocxFormatAdjust(input_docx, output_docx, format_type='行長經營管理專題會會議紀要（2025年第X號）')
     dfa.run()
-
-    # text = '，首行缩进2字元；全文英文及数字Times New Roman，行距固定值29点/磅，下同。文中结构层次序数依次用“一、”“（一）”“1.”“（1）”标注。）'
-    # pattern = r'[\u4e00-\u9fa5]+'
-    # print(re.findall(pattern, text, re.DOTALL))
-    # # ['首行缩进', '字元', '全文英文及数字', '行距固定值', '点', '磅', '下同', '文中结构层次序数依次用', '一', '一', '标注']

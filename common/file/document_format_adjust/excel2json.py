@@ -1,3 +1,5 @@
+import ast
+
 import pandas as pd
 import json
 
@@ -58,9 +60,12 @@ for _, row in df.iterrows():
         if sub_key in ['is_bold', 'is_italic', 'is_underline']:
             sub_val = True if row[col] else False
 
+        if sub_key in ['docx_xml']:
+            sub_val = ast.literal_eval(sub_val)
+
         sub_dict[sub_key] = sub_val
 
     # 添加到列表中
     result[a_val][b_val].append(sub_dict)
 
-print(json.dumps(result, ensure_ascii=False, indent=2))
+print(result)
