@@ -235,10 +235,10 @@ if __name__ == '__main__':
     # print(f'regular:', regular)
     # print(f're_result:', re_result)
 
-    input_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會會議紀要（2025年第X號）.docx'
-    output_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會會議紀要（2025年第X號）_1.docx'
+    input_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會觀點摘錄（2025年第X號）.docx'
+    output_docx = r'D:\AiAgent\SBG\common\file\document_format_adjust\行長經營管理專題會觀點摘錄（2025年第X號）_1.docx'
 
-    dfa = DocxFormatAdjust(input_docx, output_docx, format_type='行長經營管理專題會會議紀要（2025年第X號）')
+    dfa = DocxFormatAdjust(input_docx, output_docx, format_type='行長經營管理專題會觀點摘錄（2025年第X號）')
     dfa.run()
 
     # text = f'正文新細明體16號，英文及數字Times New Roman，行距固定值29點，首行縮進2字元。'
