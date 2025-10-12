@@ -132,7 +132,7 @@ class DocxFormatAdjust:
                         'en_font': 'Times New Roman',
                     }
                 ],
-                'page_footer': [
+                'page_number': [
                     {
                         # 'para_text': '文档密级',
                         'record_page': True,

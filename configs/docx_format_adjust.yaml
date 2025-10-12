@@ -4,21 +4,91 @@ default:
       line_spacing: 29
       space_before: 0.5
       space_after: 0.5
-      zh_font: STZhongsong
+      zh_font: 'STZhongsong'
       font_size: 20
       is_bold: true
+      is_italic: false
       is_break: true
 
     - regular: '^汇报部门.*'
       line_spacing: 29
-      zh_font: STKaiti
+      zh_font: 'STKaiti'
       font_size: 16
       is_bold: true
       is_break: true
 
     - line_spacing: 29
       first_line_indent: 2
-      zh_font: FangSong
+      zh_font: 'FangSong'
       en_font: 'Times New Roman'
       font_size: 16
       is_bold: false
+
+  Heading 1:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'SimHei'
+      en_font: 'Times New Roman'
+      font_size: 16
+
+  Heading 2:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'STKaiti'
+      en_font: 'Times New Roman'
+      font_size: 16
+      is_bold: true
+
+  Heading 3:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'FangSong'
+      en_font: 'Times New Roman'
+      font_size: 16
+
+  Heading 4:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'FangSong'
+      en_font: 'Times New Roman'
+      font_size: 16
+
+  Body Text Indent 2:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'FangSong'
+      en_font: 'Times New Roman'
+      font_size: 16
+      is_bold: false
+
+  Table.Cell Body Text Indent 2:
+    - line_spacing: 29
+      first_line_indent: 2
+      zh_font: 'FangSong'
+      en_font: 'Times New Roman'
+      font_size: 16
+      is_bold: false
+
+  page_header:
+    - para_text: '文档密级'
+      alignment: 0
+      font_size: 18
+      zh_font: 'Kaiti'
+      en_font: 'Times New Roman'
+
+  page_footer:
+    - para_text: '[文件日期]: 2025-10-10'
+      alignment: 0
+      font_size: 14
+      zh_font: 'Kaiti'
+      en_font: 'Times New Roman'
+
+  page_number:
+    - alignment: 1
+      font_size: 10
+      zh_font: 'Kaiti'
+      en_font: 'Times New Roman'
+      docx_xml:
+        - '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:fldChar w:fldCharType="begin" w:dirty="1"/><w:instrText xml:space="preserve"> PAGE </w:instrText><w:fldChar w:fldCharType="separate"/><w:fldChar w:fldCharType="end"/></w:r>'
+        - '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:t xml:space="preserve"> / </w:t></w:r>'
+        - '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:fldChar w:fldCharType="begin" w:dirty="1"/><w:instrText xml:space="preserve"> NUMPAGES </w:instrText><w:fldChar w:fldCharType="separate"/><w:fldChar w:fldCharType="end"/></w:r>'
