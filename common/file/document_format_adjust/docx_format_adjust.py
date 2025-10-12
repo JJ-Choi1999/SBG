@@ -1,10 +1,11 @@
+import json
 import re
 
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import parse_xml
 from docx.oxml.ns import qn
-from docx.shared import Length, Pt, Inches
+from docx.shared import Length, Pt, Inches, RGBColor
 from docx.text.paragraph import Paragraph
 
 from common.file.document_replace.docx_replace import merge_cells_by_value
@@ -16,9 +17,12 @@ class DocxFormatAdjust:
         self,
         input_docx: str,
         output_docx: str = None,
+        is_merge_cells: bool = False,
         format_type: str = 'default',
         header_style: str = 'page_header',
-        footer_style: str = 'page_footer'
+        footer_style: str = 'page_footer',
+        page_number_style: str = 'page_number',
+        format_map: dict = None,
     ):
 
         self.__input_docx = input_docx
@@ -26,6 +30,8 @@ class DocxFormatAdjust:
         self.__format_type = format_type
         self.__header_style = header_style
         self.__footer_style = footer_style
+        self.__page_number_style = page_number_style
+        self.__is_merge_cells = is_merge_cells
 
         if not self.__output_docx: self.__output_docx = self.__input_docx
 
@@ -138,17 +144,27 @@ class DocxFormatAdjust:
                 ],
             }
         }
+        print(json.dumps(self.__format_map, ensure_ascii=False, indent=2))
 
         self.__docx = Document(self.__input_docx)
 
     def run(self):
 
-        self.format_adjust_header(style_name=self.__header_style)
-        self.format_adjust_footer(style_name=self.__footer_style)
+        if self.__format_map.get(self.__format_type, {}).get(self.__header_style, []):
+            self.format_adjust_header(style_name=self.__header_style)
+
+        if self.__format_map.get(self.__format_type, {}).get(self.__footer_style, []):
+            self.format_adjust_footer(style_name=self.__footer_style)
+
+        if self.__format_map.get(self.__format_type, {}).get(self.__page_number_style, []):
+            self.format_adjust_page_number(style_name=self.__page_number_style)
+
         self.format_adjust_paras()
         self.format_adjust_tables()
 
         self.__docx.save(self.__output_docx)
+
+        return self.__output_docx
 
     def format_adjust_header(self, style_name: str = 'page_header'):
 
@@ -165,24 +181,18 @@ class DocxFormatAdjust:
 
     def format_adjust_footer(self, style_name: str = 'page_footer'):
 
-        # for section_index, section in enumerate(self.__docx.sections):
-        #     footer = section.footer
-        #
-        #     if not footer.paragraphs:
-        #         footer.add_paragraph(text='footer_holder')
-        #
-        #     for para in footer.paragraphs:
-        #         if not para.text: para.text = 'footer_holder'
-        #         format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
-        #         if not format_rules: continue
-        #
-        #         if format_rules[0].get('record_page'):
-        #             format_rules[0]['para_text'] = f'{section_index + 1} / {len(self.__docx.sections)}'
-        #
-        #         self.__format_adjust_para(para=para, format_rules=format_rules)
-        #
-        #
+        for section in self.__docx.sections:
+            footer = section.footer
+            if not footer.paragraphs:
+                footer.add_paragraph(text='footer_holder')
 
+            for para in footer.paragraphs:
+                if not para.text: para.text = 'footer_holder'
+                format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
+                if not format_rules: continue
+                self.__format_adjust_para(para=para, format_rules=format_rules)
+
+    def format_adjust_page_number(self, style_name: str = 'page_footer'):
 
         # 获取所有节
         for section in self.__docx.sections:
@@ -194,45 +204,10 @@ class DocxFormatAdjust:
 
             # 创建新的页脚段落
             p = footer.paragraphs[0]
-            p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER  # 居中对齐
 
-            # 设置字体大小
-            for run in p.runs:
-                run.font.size = Pt(10)
-
-            # 添加页码和总页数域
-            run = p.add_run()
-            # 构建页码和总页数域的XML
-            xml = (
-                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-                '<w:fldChar w:fldCharType="begin" w:dirty="1"/>'
-                '<w:instrText xml:space="preserve"> PAGE </w:instrText>'
-                '<w:fldChar w:fldCharType="separate"/>'
-                '<w:fldChar w:fldCharType="end"/>'
-                '</w:r>'
-            )
-            # 正确的添加方式
-            run._element.append(parse_xml(xml))
-
-            # 构建页码和总页数域的XML
-            xml = (
-                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-                '<w:t xml:space="preserve"> / </w:t>'
-                '</w:r>'
-            )
-            # 正确的添加方式
-            run._element.append(parse_xml(xml))
-            # 构建页码和总页数域的XML
-            xml = (
-                '<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
-                '<w:fldChar w:fldCharType="begin" w:dirty="1"/>'
-                '<w:instrText xml:space="preserve"> NUMPAGES </w:instrText>'
-                '<w:fldChar w:fldCharType="separate"/>'
-                '<w:fldChar w:fldCharType="end"/>'
-                '</w:r>'
-            )
-            # 正确的添加方式
-            run._element.append(parse_xml(xml))
+            format_rules = self.__format_map.get(self.__format_type, {}).get(style_name, [])
+            if not format_rules: continue
+            self.__format_adjust_para(para=p, format_rules=format_rules, is_filter_null=False)
 
     def format_adjust_tables(self):
         for table in self.__docx.tables:
@@ -240,11 +215,12 @@ class DocxFormatAdjust:
                 for cell in row.cells:
                     for para in cell.paragraphs:
                         format_rules = self.__format_map.get(self.__format_type, {}).get(
-                            f'[Table.Cell]{para.style.name}', [])
+                            f'Table.Cell {para.style.name}', [])
                         if not format_rules: continue
                         self.__format_adjust_para(para=para, format_rules=format_rules)
 
-            merge_cells_by_value(table=table)
+            if self.__is_merge_cells:
+                merge_cells_by_value(table=table)
 
     def format_adjust_paras(self):
         for para in self.__docx.paragraphs:
@@ -252,7 +228,7 @@ class DocxFormatAdjust:
             if not format_rules: continue
             self.__format_adjust_para(para=para, format_rules=format_rules)
 
-    def __format_adjust_para(self, para: Paragraph, format_rules: list[dict] = None):
+    def __format_adjust_para(self, para: Paragraph, format_rules: list[dict] = None, is_filter_null: bool = True):
 
         if not format_rules: return
 
@@ -261,47 +237,53 @@ class DocxFormatAdjust:
 
             if is_break: break
 
-            if not para.text: continue
+            if is_filter_null and not para.text: continue
+
+            run_regular = format_rule.pop('run_regular', '')
 
             for fr_key, fr_val in format_rule.items():
 
-                if fr_key == 'regular' and fr_val and not re.findall(fr_val, para.text, re.DOTALL): break
+                if fr_key == 'regular' and fr_val is not None and not re.findall(fr_val, para.text, re.DOTALL): break
 
                 print(f'({rule_index + 1}) para.text: {para.text}, fr_key: {fr_key}, fr_val: {fr_val}')
 
-                if fr_key == 'line_spacing' and fr_val:
+                if fr_key == 'line_spacing' and fr_val is not None:
                     para.paragraph_format.line_spacing = Length(fr_val * Length._EMUS_PER_PT)
 
-                if fr_key == 'space_before' and fr_val:
+                if fr_key == 'space_before' and fr_val is not None:
                     para.paragraph_format.space_before = Pt(round(fr_val * 12, 2))
 
-                if fr_key == 'space_after' and fr_val:
+                if fr_key == 'space_after' and fr_val is not None:
                     para.paragraph_format.space_after = Pt(round(fr_val * 12, 2))
 
-                if fr_key == 'first_line_indent' and fr_val:
+                if fr_key == 'first_line_indent' and fr_val is not None:
                     # 0.2 英寸越等于一个字符
                     para.paragraph_format.first_line_indent = Inches(round(fr_val * 0.2, 2))
 
-                if fr_key == 'alignment' and fr_val:
+                if fr_key == 'alignment' and fr_val is not None:
                     para.alignment = fr_val
 
-                if fr_key == 'para_text' and fr_val:
+                if fr_key == 'para_text' and fr_val is not None:
                     para.text = fr_val
 
-                if fr_key == 'is_bold' and fr_val:
+                if fr_key == 'is_bold' and fr_val is not None:
                     for run in para.runs:
-                        run.bold = True
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
+                        run.bold = fr_val
 
-                if fr_key == 'is_italic' and fr_val:
+                if fr_key == 'is_italic' and fr_val is not None:
                     for run in para.runs:
-                        run.italic = True
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
+                        run.italic = fr_val
 
-                if fr_key == 'is_underline' and fr_val:
+                if fr_key == 'is_underline' and fr_val is not None:
                     for run in para.runs:
-                        run.underline = True
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
+                        run.underline = fr_val
 
-                if fr_key == 'zh_font' and fr_val:
+                if fr_key == 'zh_font' and fr_val is not None:
                     for run in para.runs:
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
                         try:
                             # 中文系统字体名
                             run.font.name = fr_val
@@ -309,15 +291,31 @@ class DocxFormatAdjust:
                         except Exception as e:
                             print(f'para.style.name: {para.style.name}, 异常文本: {run.text}')
 
-                if fr_key == 'en_font' and fr_val:
+                if fr_key == 'en_font' and fr_val is not None:
                     for run in para.runs:
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
                         run.font.name = fr_val
 
-                if fr_key == 'font_size' and fr_val:
+                if fr_key == 'font_size' and fr_val is not None:
                     for run in para.runs:
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
                         run.font.size = Pt(fr_val)
 
-                if fr_key == 'is_break' and fr_val:
+                if fr_key == 'font_color' and fr_val:
+                    for run in para.runs:
+                        if run_regular and not re.findall(run_regular, run.text, re.DOTALL): continue
+                        run.font.color.rgb = RGBColor(*fr_key)
+
+                if fr_key == 'docx_xml' and fr_val is not None:
+                    # 添加页码和总页数域
+                    run = para.add_run()
+                    # 迭代构建页码和总页数域的XML
+                    for xml in fr_val:
+                        print(f'xml: {xml}')
+                        # 添加xml到docx
+                        run._element.append(parse_xml(xml))
+
+                if fr_key == 'is_break' and fr_val is not None:
                     is_break = True
 
 if __name__ == '__main__':
