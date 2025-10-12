@@ -31,12 +31,12 @@ zh2en_map= {
 }
 
 multiple_map = {
-    1: WD_LINE_SPACING.SINGLE,
-    1.5: WD_LINE_SPACING.ONE_POINT_FIVE,
-    2: WD_LINE_SPACING.DOUBLE,
-    'at_least': WD_LINE_SPACING.AT_LEAST,
-    'exactly': WD_LINE_SPACING.EXACTLY,
-    'multiple': WD_LINE_SPACING.MULTIPLE
+    1: 0,
+    1.5: 1,
+    2: 2,
+    'at_least': 3,
+    'exactly': 4,
+    'multiple': 5
 }
 
 # 初始化结果字典
@@ -80,4 +80,4 @@ for _, row in df.iterrows():
     # 添加到列表中
     result[a_val][b_val].append(sub_dict)
 
-print(json.dumps(result, ensure_ascii=False, indent=2))
+print(result)
